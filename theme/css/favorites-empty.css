@@ -1,0 +1,123 @@
+/* ==========================================================================
+   Catalog page
+   ========================================================================== */
+
+/* The header is always solid white here (no dark hero to sit over),
+   so it doesn't depend on the scroll-driven .header--light toggle. */
+.header {
+    background-color: #fff;
+    color: #000;
+}
+
+.header__btn,
+.header__phone {
+    color: #000;
+}
+
+.header img {
+    filter: invert(1);
+}
+
+/* ==========================================================================
+   Catalog section
+   ========================================================================== */
+.catalog {
+    padding-top: 142px;
+}
+
+.catalog__breadcrumbs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.catalog__crumb {
+    transition: opacity 0.25s ease;
+}
+
+.catalog__crumb:not(.catalog__crumb--current):hover {
+    opacity: 0.6;
+}
+
+.catalog__crumb--current {
+    font-weight: 400;
+}
+
+.catalog__title {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #000;
+}
+
+/* faq */
+.faq__item:last-child {
+    border-bottom: none;
+}
+
+/* popular */
+.popular {
+    padding-top: 0px !important;
+    padding-bottom: 0px;
+}
+
+/* .favorites  */
+.favorites {
+    padding-bottom: 60px;
+    padding-top: 0px;
+}
+/* hearts are pre-filled (is-active in the markup) and always visible here;
+   clicking still toggles them off, same as on every other page.
+   scoped to .favorites so the search-panel cards keep their hover-reveal */
+.favorites .popular-card__fav {
+    opacity: 1;
+    visibility: visible;
+    width: auto;
+    height: auto;
+    background-color: transparent;
+    top: 30px;
+    right: 30px;
+}
+
+/* ==========================================================================
+   Empty favorites state — full-height section, content centered
+   ========================================================================== */
+.catalog {
+    height: var(--fixed-vh, 100vh);
+    position: relative;
+}
+
+/* centered in the full section height — top:50% is from the padding box, so
+   the top padding and the breadcrumbs above don't shift it off-centre */
+.favorites-empty {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 var(--container-padding);
+}
+
+/* title / text / button — same styling as the 404 page */
+.favorites-empty__title {
+    color: #000;
+}
+
+.favorites-empty__text {
+    margin-top: 20px;
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+.favorites-empty__btn {
+    margin-top: 30px;
+}

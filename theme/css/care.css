@@ -1,0 +1,159 @@
+/* ==========================================================================
+   Catalog page
+   ========================================================================== */
+
+/* The header is always solid white here (no dark hero to sit over),
+   so it doesn't depend on the scroll-driven .header--light toggle. */
+.header {
+    background-color: #fff;
+    color: #000;
+}
+
+.header__btn,
+.header__phone {
+    color: #000;
+}
+
+.header img {
+    filter: invert(1);
+}
+
+/* ==========================================================================
+   Catalog section
+   ========================================================================== */
+.catalog {
+    padding-top: 142px;
+}
+
+.catalog__title {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #000;
+}
+
+.catalog__breadcrumbs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.catalog__crumb {
+    transition: opacity 0.25s ease;
+}
+
+.catalog__crumb:not(.catalog__crumb--current):hover {
+    opacity: 0.6;
+}
+
+.catalog__crumb--current {
+    font-weight: 400;
+}
+/* ==========================================================================
+   Care page — intro + do/don't table
+   ========================================================================== */
+.care__intro {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 60px;
+}
+
+.care__text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    margin-left: 8%;
+}
+
+.care__title {
+    margin-bottom: 10px;
+    color: #000;
+    font-size: 34px;
+}
+
+.care__desc {
+    max-width: 714px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+/* pushed down and aligned to the right edge, near the image */
+.care__note {
+    max-width: 300px;
+    margin-top: 170px;
+    align-self: flex-end;
+    font-weight: 300;
+    font-size: 20px;
+    text-align: right;
+    color: #000;
+}
+
+/* --- do/don't table (two columns, zebra rows) --- */
+.care__table {
+    max-width: 1224px;
+    margin: 0 auto;
+}
+
+.care__row {
+    display: flex;
+}
+
+/* header + every other row get a subtle fill */
+.care__row:nth-child(odd) {
+    background: #f9f9f9;
+}
+
+.care__cell {
+    flex: 1;
+    padding: 28px 20px;
+    text-align: center;
+    color: #000;
+}
+
+/* data-cell text — header cells keep their .section-title styling */
+.care__row:not(.care__row--head) .care__cell {
+    font-weight: 300;
+    font-size: 20px;
+    text-align: center;
+    color: #000;
+}
+
+/* the divider down the middle */
+.care__cell--left {
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.care__row--head .care__cell {
+    padding: 30px 20px;
+}
+
+/* faq */
+.faq {
+    padding-bottom: 120px;
+}
+
+/* buy */
+.buy__step {
+    flex: 0 1 314px;
+}
+
+.buy__steps {
+    margin-bottom: 0px;
+}
+
+/* popular */
+.popular {
+    padding: 0px;
+}
+
+/* cta */
+.cta__desc {
+    max-width: 700px;
+}

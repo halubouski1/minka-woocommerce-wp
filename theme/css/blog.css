@@ -1,0 +1,131 @@
+/* ==========================================================================
+   Catalog page
+   ========================================================================== */
+
+/* The header is always solid white here (no dark hero to sit over),
+   so it doesn't depend on the scroll-driven .header--light toggle. */
+.header {
+    background-color: #fff;
+    color: #000;
+}
+
+.header__btn,
+.header__phone {
+    color: #000;
+}
+
+.header img {
+    filter: invert(1);
+}
+
+/* ==========================================================================
+   Catalog section
+   ========================================================================== */
+.catalog {
+    padding-top: 142px;
+}
+
+.catalog__breadcrumbs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.catalog__crumb {
+    transition: opacity 0.25s ease;
+}
+
+.catalog__crumb:not(.catalog__crumb--current):hover {
+    opacity: 0.6;
+}
+
+.catalog__crumb--current {
+    font-weight: 400;
+}
+
+.catalog__title {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #000;
+}
+
+/* faq */
+.faq__item:last-child {
+    border-bottom: none;
+}
+/* ==========================================================================
+   Blog grid — 3 cards per row
+   ========================================================================== */
+.blog__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 10px;
+    row-gap: 20px;
+}
+
+.blog__card {
+    display: block;
+    color: #000;
+}
+
+/* clips the zoom to the image's bounds */
+.blog__img-wrap {
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.blog__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.blog__card:hover .blog__img {
+    transform: scale(1.05);
+}
+
+.blog__title {
+    margin-bottom: 8px;
+    font-weight: 400;
+    font-size: 24px;
+    color: #000;
+}
+
+.blog__time {
+    display: block;
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+/* --- "Показать ещё": cap visible cards, reveal the rest on click --- */
+/* desktop: 9 (3 rows of 3) */
+.blog__card:nth-child(n+10) {
+    display: none;
+}
+
+.blog__grid.is-expanded .blog__card {
+    display: block;
+}
+
+.blog__grid.is-expanded .blog__card:nth-child(n+10) {
+    animation: blog-reveal 0.5s ease both;
+}
+
+@keyframes blog-reveal {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.blog__more {
+    display: block;
+    width: fit-content;
+    margin: 40px auto 0;
+}

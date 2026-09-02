@@ -1,0 +1,697 @@
+/* ==========================================================================
+   Catalog page
+   ========================================================================== */
+
+/* The header is always solid white here (no dark hero to sit over),
+   so it doesn't depend on the scroll-driven .header--light toggle. */
+.header {
+    background-color: #fff;
+    color: #000;
+}
+
+.header__btn,
+.header__phone {
+    color: #000;
+}
+
+.header img {
+    filter: invert(1);
+}
+
+/* ==========================================================================
+   Catalog section
+   ========================================================================== */
+.catalog {
+    padding-top: 142px;
+}
+
+.catalog__breadcrumbs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.catalog__crumb {
+    transition: opacity 0.25s ease;
+}
+
+.catalog__crumb:not(.catalog__crumb--current):hover {
+    opacity: 0.6;
+}
+
+.catalog__crumb--current {
+    font-weight: 400;
+}
+
+.catalog__title {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #000;
+}
+
+.catalog__filters {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+/* left side of the bar: the filter group + the clear button, 40px apart,
+   kept in one wrapper so the space-between only splits filters vs. sort */
+.catalog__filters-left {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.catalog__filter-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.catalog__clear {
+    font-weight: 300;
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    /* hidden until at least one filter is selected — visibility:hidden also
+       drops it from the tab order so it can't be focused while invisible */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-8px);
+    pointer-events: none;
+    transition: color 0.25s ease, opacity 0.3s ease, transform 0.3s ease,
+        visibility 0.3s ease;
+}
+
+.catalog__clear--visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.catalog__clear:hover {
+    color: #000;
+}
+
+.catalog__filter {
+    position: relative;
+}
+
+.catalog__filter-btn,
+.catalog__sort {
+    position: relative;
+    font-weight: 400;
+    font-size: 24px;
+    color: #000;
+    transition: opacity 0.25s ease;
+}
+
+.catalog__filter-btn:hover,
+.catalog__sort:hover {
+    opacity: 0.6;
+}
+
+/* underline that grows in while the filter is open */
+.catalog__filter-btn::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 1px;
+    background-color: #000;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.catalog__filter.is-open .catalog__filter-btn::after {
+    transform: scaleX(1);
+}
+
+/* selected-count badge, top-right of a filter button */
+.catalog__filter-count {
+    position: absolute;
+    top: -5px;
+    right: -12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 999px;
+    color: #000;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.2);
+    transform-origin: center;
+    transition: opacity 0.25s ease,
+        transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.catalog__filter-count--visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* dropdown panel */
+.catalog__dropdown {
+    position: absolute;
+    top: calc(100% + 1px);
+    left: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 23px 11px 20px 10px;
+    background-color: #fff;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
+}
+
+.catalog__filter.is-open .catalog__dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* ---- sort control: label + chevron + its dropdown ---- */
+.catalog__sort {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* no growing underline here — only the chevron reacts */
+.catalog__sort::after {
+    display: none;
+}
+
+.catalog__sort-chevron {
+    margin-top: 4px;
+    transition: transform 0.3s ease;
+    display: none;
+}
+
+.catalog__filter--sort.is-open .catalog__sort-chevron {
+    transform: rotate(180deg);
+}
+
+/* opens flush to the right edge (button sits on the right) */
+.catalog__dropdown--sort {
+    left: auto;
+    right: 0;
+    padding: 20px;
+}
+
+.catalog__sort-option {
+    display: flex;
+    flex-direction: column;
+    font-weight: 300;
+    font-size: 20px;
+    white-space: nowrap;
+    text-align: left;
+    color: #000;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+/* invisible copy at the bold weight — holds each option's width steady
+   so making one active never resizes (and shifts) the dropdown */
+.catalog__sort-option::after {
+    content: attr(data-text);
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    font-weight: 400;
+}
+
+.catalog__sort-option:hover {
+    opacity: 0.6;
+}
+
+.catalog__sort-option--active {
+    font-weight: 400;
+}
+
+.catalog__option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 300;
+    font-size: 20px;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.catalog__checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.catalog__box {
+    position: relative;
+    flex-shrink: 0;
+    width: 19px;
+    height: 19px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    transition: border-color 0.2s ease;
+}
+
+.catalog__box::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 11px;
+    height: 11px;
+    background-color: #000;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+}
+
+.catalog__checkbox:checked + .catalog__box {
+    border-color: #000;
+}
+
+.catalog__checkbox:checked + .catalog__box::after {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* the real checkbox is opacity:0, so its keyboard focus ring is invisible —
+   show it on the whole option row instead (:has = the label that contains the
+   focused checkbox) */
+.catalog__option:has(.catalog__checkbox:focus-visible) {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+}
+
+/* ---- price: dual-handle range slider ---- */
+.catalog__dropdown--price {
+    display: block;
+    width: 400px;
+    padding: 24px 20px 20px 20px;
+}
+
+.catalog__range {
+    position: relative;
+    height: 11px;
+    cursor: pointer;
+    touch-action: none;
+}
+
+/* the full (unselected) track — centered via margin (not transform, which on
+   iOS promotes it to its own layer that lags behind the accordion reveal) */
+.catalog__range-track {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    margin-top: -0.5px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* the selected span between the two handles (positioned by JS) */
+.catalog__range-fill {
+    position: absolute;
+    top: 50%;
+    height: 2px;
+    margin-top: -1px;
+    background-color: #000;
+}
+
+/* the two overlapping range inputs — only their thumbs are interactive */
+.catalog__range-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 11px;
+    margin: 0;
+    background: none;
+    pointer-events: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.catalog__range-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 11px;
+    height: 11px;
+    border: none;
+    border-radius: 0;
+    background-color: #000;
+    cursor: pointer;
+    pointer-events: none;
+}
+
+.catalog__range-input::-moz-range-thumb {
+    width: 11px;
+    height: 11px;
+    border: none;
+    border-radius: 0;
+    background-color: #000;
+    cursor: pointer;
+    pointer-events: none;
+}
+
+.catalog__range-input::-webkit-slider-runnable-track {
+    background: none;
+    border: none;
+}
+
+.catalog__range-input::-moz-range-track {
+    background: none;
+    border: none;
+}
+
+/* each input spans the full track, so its default focus ring wraps the whole
+   slider — put the keyboard ring on the thumb (the square) instead */
+.catalog__range-input:focus-visible {
+    outline: none;
+}
+
+.catalog__range-input:focus-visible::-webkit-slider-thumb {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+.catalog__range-input:focus-visible::-moz-range-thumb {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+.catalog__range-values {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+.catalog__range-summary {
+    margin-top: 20px;
+    font-weight: 400;
+    font-size: 20px;
+    white-space: nowrap;
+    color: #000;
+}
+
+/* ---- cards: alternating [2x2 grid] + [big card] rows ---- */
+.catalog__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.catalog__row {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.catalog__row--reverse {
+    flex-direction: row-reverse;
+}
+
+.catalog__quad {
+    flex: 1 1 50%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 10px;
+    row-gap: 20px;
+}
+
+.catalog__feature {
+    flex: 1 1 50%;
+    display: flex;
+}
+
+.catalog__feature .popular-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* the link now wraps img/title/price, so it must carry the card's flex column
+   (desktop) for the feature image to fill the tall card */
+.catalog__feature .popular-card__link {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.catalog__feature .popular-card__img {
+    flex: 1;
+    min-height: 0;
+    object-fit: cover;
+}
+
+/* faq */
+.faq__item:last-child {
+    border-bottom: none;
+}
+
+.faq {
+    padding-top: 0px;
+}
+/* "Показать ещё" button + smooth reveal of appended rows */
+.catalog__more {
+    display: block;
+    width: fit-content;
+    margin: 40px auto 0;
+}
+
+.catalog__row {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.catalog__row--enter {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.catalog__row--hidden {
+    display: none;
+}
+
+/* ==========================================================================
+   Mobile filters offcanvas — hidden here, switched on ≤1024 in media-catalog
+   ========================================================================== */
+.catalog__filters-toggle {
+    display: none; /* shown ≤1024 */
+    font-weight: 400;
+    font-size: 18px;
+    color: #000;
+    cursor: pointer;
+}
+
+.filters,
+.filters-overlay {
+    display: none; /* enabled ≤1024 */
+}
+
+.filters-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background-color: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.filters-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.filters {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 95%;
+    height: var(--fixed-vh, 100vh);
+    overflow-y: auto;
+    overscroll-behavior: none;
+    background-color: #fff;
+    transform: translateX(-101%);
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+}
+
+.filters.active {
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.filters__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
+    padding: 25px 20px 30px;
+}
+
+.filters__close {
+    display: block;
+    position: absolute;
+    top: 37px;
+    right: 30px;
+    transition: opacity 0.25s ease;
+}
+
+.filters__close img {
+    width: 13px;
+    height: 13px;
+}
+
+.filters__close:hover {
+    opacity: 0.6;
+}
+
+.filters__logo {
+    display: block;
+    width: fit-content;
+    margin: 0px auto 0;
+}
+
+.filters__logo img {
+    width: 195px;
+    height: auto;
+}
+
+.filters__label {
+    display: block;
+    margin-top: 30px;
+    font-weight: 400;
+    font-size: 20px;
+    color: #000;
+}
+
+.filters__list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* one filter = accordion */
+.filters-acc__btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    font-weight: 400;
+    font-size: 20px;
+    color: #000;
+    cursor: pointer;
+}
+
+.filters-acc__chevron {
+    transition: transform 0.3s ease;
+    margin-top: 4px;
+}
+
+.filters-acc.is-open .filters-acc__chevron {
+    transform: rotate(180deg);
+}
+
+/* smooth auto-height reveal (0fr → 1fr) */
+.filters-acc__body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s ease;
+}
+
+.filters-acc.is-open .filters-acc__body {
+    grid-template-rows: 1fr;
+}
+
+.filters-acc__inner {
+    overflow: hidden;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 0;
+    margin-left: 14px;
+    /* collapsed accordions clip to 0 height but their options stay in the tab
+       order — hide them so Tab skips a collapsed section's variants */
+    visibility: hidden;
+    transition: visibility 0.35s ease;
+}
+
+.filters-acc.is-open .filters-acc__inner {
+    visibility: visible;
+}
+
+.filters-acc--price .filters-acc__inner {
+    gap: 0;
+}
+
+.filters__actions {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.filters__clear {
+    align-self: center;
+    font-weight: 300;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    /* hidden (and collapsed, so no gap above Применить) until a filter is set;
+       visibility:hidden also keeps it out of the tab order while invisible */
+    max-height: 0;
+    margin-bottom: 0;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+    pointer-events: none;
+    transition: max-height 0.3s ease, margin-bottom 0.3s ease,
+        opacity 0.3s ease, color 0.25s ease, visibility 0.3s ease;
+}
+
+.filters__clear--visible {
+    max-height: 30px;
+    margin-bottom: 10px;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.filters__clear:hover {
+    color: #000;
+}
+
+.filters__apply {
+    width: 100%;
+}
+
+.catalog__range {
+    margin-top: 14px;
+}

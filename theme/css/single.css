@@ -1,0 +1,262 @@
+/* ==========================================================================
+   Catalog page
+   ========================================================================== */
+
+/* The header is always solid white here (no dark hero to sit over),
+   so it doesn't depend on the scroll-driven .header--light toggle. */
+.header {
+    background-color: #fff;
+    color: #000;
+}
+
+.header__btn,
+.header__phone {
+    color: #000;
+}
+
+.header img {
+    filter: invert(1);
+}
+
+/* ==========================================================================
+   Catalog section
+   ========================================================================== */
+.catalog {
+    padding-top: 142px;
+}
+
+.catalog__breadcrumbs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 30px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.catalog__crumb {
+    transition: opacity 0.25s ease;
+}
+
+.catalog__crumb:not(.catalog__crumb--current):hover {
+    opacity: 0.6;
+}
+
+.catalog__crumb--current {
+    font-weight: 400;
+}
+/* ==========================================================================
+   Single product section
+   ========================================================================== */
+.single {
+    padding-bottom: 60px;
+}
+
+.single__layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 164px;
+    /* only the right side is padded — the gallery stays flush to the edge */
+}
+
+/* left: image column, exactly half the screen (a slider on mobile) */
+.single__gallery {
+    flex: 0 0 47.7vw;
+}
+
+.single__gallery-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.single__img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* slider controls — only shown ≤760 */
+.single__arrow,
+.single__pagination {
+    display: none;
+}
+
+/* right: info panel — fixed in place while the gallery scrolls past */
+.single__info {
+    position: sticky;
+    top: 120px;
+    flex: 1 1 auto;
+    max-width: 607px;
+}
+
+/* --- top block (everything down to the first border) --- */
+.single__head {
+    margin-bottom: 40px;
+}
+
+/* title + icons share one row, on the same level; price sits below it */
+.single__title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 4px;
+}
+
+.single__art {
+    display: block;
+    margin-bottom: 0;
+    font-weight: 300;
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.68);
+    text-transform: uppercase;
+}
+
+.single__price {
+    font-weight: 300;
+    font-size: 26px;
+    color: #000;
+}
+
+.single__icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.single__icon {
+    display: flex;
+    cursor: pointer;
+    transition: opacity 0.25s ease;
+}
+
+.single__icon:hover {
+    opacity: 0.6;
+}
+
+.single__icon img {
+    width: 24px;
+    height: auto;
+}
+
+/* heart fills on click (filled overlay crossfades in) */
+.single__fav {
+    position: relative;
+}
+
+.single__fav::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('../assets/icons/favorite-filled.svg') center / contain no-repeat;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+.single__fav.is-active::after {
+    opacity: 1;
+}
+
+/* actions */
+.single__availability {
+    display: block;
+    width: fit-content;
+    margin: 20px auto 0;
+}
+
+.single__fitting {
+    display: block;
+    width: fit-content;
+    margin: 14px auto 0;
+
+}
+
+/* --- middle block: spec rows, bordered top & bottom --- */
+.single__specs {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 40px 0;
+    margin-bottom: 40px;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.single__spec {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.single__spec-label {
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.single__spec-value {
+    font-weight: 400;
+    font-size: 24px;
+    text-align: right;
+    color: #000;
+}
+
+/* --- description (full available width) --- */
+.single__desc {
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+/* .faq */
+.faq {
+    padding-top: 60px;
+}
+
+.faq__item:last-child {
+    border-bottom: none;
+}
+/* ==========================================================================
+   Gift popup ("Намекните близкому о подарке")
+   ========================================================================== */
+.popup__gift-text {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    margin-bottom: 40px;
+}
+
+.popup__gift-text p {
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+/* the fill-in-the-blank that mirrors the name fields as you type — no min-width,
+   so it grows with the typed content instead of holding a fixed blank */
+.popup__fill {
+    display: inline-block;
+    padding: 0 6px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* spacing: label → 20px → inputs → 40px → next group */
+.popup__form--gift .popup__label {
+    margin-bottom: 20px;
+}
+
+.popup__form--gift .popup__inputs {
+    margin-bottom: 40px;
+}
+
+.popup__gift .popup__title {
+    max-width: 434px;
+}

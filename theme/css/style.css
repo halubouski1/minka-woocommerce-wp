@@ -1,0 +1,1791 @@
+/* ==========================================================================
+   Fonts
+   ========================================================================== */
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('../assets/fonts/CormorantGaramond-Regular.woff2') format('woff2'),
+         url('../assets/fonts/CormorantGaramond-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Lato';
+    src: url('../assets/fonts/Lato-Regular.woff2') format('woff2'),
+         url('../assets/fonts/Lato-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Lato';
+    src: url('../assets/fonts/Lato-Light.woff2') format('woff2'),
+         url('../assets/fonts/Lato-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Arapey';
+    src: url('../assets/fonts/Arapey-Regular.woff2') format('woff2'),
+         url('../assets/fonts/Arapey-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ==========================================================================
+   Base / reset
+   ========================================================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Keyboard focus ring: shown only for keyboard/programmatic focus — never on a
+   mouse click (that's what jumps). currentColor keeps it visible on light and
+   dark; outline (not border) means it never shifts the layout. */
+:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+}
+
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.header__btn:focus-visible, .header__logo:focus-visible,
+.header__phone:focus-visible, .hero__catalog:focus-visible,
+.hero__availability:focus-visible, .popular-card:focus-visible, .popular-card__link:focus-visible,
+.footer__link:focus-visible, .footer__social:focus-visible,
+.footer__dev a:focus-visible, .footer__policy a:focus-visible,
+.menu__close:focus-visible, .menu__logo:focus-visible, .menu__link:focus-visible,
+.search__logo:focus-visible, .catalog__crumb:focus-visible,
+.popup__agree a:focus-visible, .contacts__value:focus-visible,
+.blog__card:focus-visible, .post a:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+}
+
+/* skip-to-content link: off-screen until focused by keyboard/screen-reader */
+.skip-link {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 200;
+    padding: 10px 18px;
+    background: #000;
+    color: #fff;
+    font-size: 16px;
+    transform: translateY(-200%);
+    transition: transform 0.2s ease;
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+/* visually hidden, still read by screen readers (live regions, labels) */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+body {
+    margin: 0;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
+    color: #000;
+    background-color: #fff;
+    font-feature-settings: "lnum" 1, "tnum" 1;
+}
+
+/* locks background scroll while the menu / search / popup is open */
+html.is-locked {
+    overflow: hidden;
+}
+
+/* body is pinned (top set from JS to -scrollY) so the background can't scroll
+   or be scrolled into view by a focused input */
+html.is-locked body {
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.menu,
+.search,
+.popup__body {
+    /* none (not contain) also kills the rubber-band bounce, so pulling down at
+       the top no longer drags the panel and reveals the overlay behind it */
+    overscroll-behavior: none;
+}
+
+h1, h2, h3, h4, h5, h6,
+p {
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+}
+
+img,
+svg,
+video {
+    display: block;
+    max-width: 100%;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* ==========================================================================
+   Layout / container
+   ========================================================================== */
+:root {
+    --container-padding: 40px;
+}
+
+.container {
+    width: 100%;
+    padding-left: var(--container-padding);
+    padding-right: var(--container-padding);
+}
+
+.section-padding {
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
+/* ==========================================================================
+   Section heading
+   ========================================================================== */
+.section-title {
+    font-family: 'Cormorant Garamond', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 39px;
+    letter-spacing: -0.08em;
+    text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+    width: 100%;
+    padding-top: 33px;
+    padding-bottom: 33px;
+    color: #fff;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.header img {
+    transition: filter 0.4s ease;
+}
+
+.header__logo {
+    margin-left: 4px;
+}
+
+.header--hidden {
+    transform: translateY(-100%);
+}
+
+.header--light {
+    background-color: #fff;
+    color: #000;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+}
+
+.header--light .header__btn,
+.header--light .header__phone {
+    color: #000;
+}
+
+.header--light img {
+    filter: invert(1);
+}
+
+/* 3 columns: the two side columns are always equal (1fr), so the logo in the
+   middle (auto) column sits at true page-center — no margin nudging needed. */
+.header__container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+}
+
+.header__left {
+    display: flex;
+    align-items: center;
+    gap: 19px;
+}
+
+.header__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 400;
+    font-size: 20px;
+    color: #fff;
+    transition: opacity 0.25s ease, color 0.4s ease;
+}
+
+.header__btn:hover, .header__phone:hover {
+    opacity: 0.7;
+}
+
+.header__logo {
+    display: block;
+}
+
+.header__logo img {
+    width: 145px;
+    height: auto;
+}
+
+.header__phone {
+    display: inline-flex;
+    align-items: center;
+    justify-self: end;
+    gap: 10px;
+    font-weight: 400;
+    font-size: 20px;
+    color: #fff;
+    transition: opacity 0.25s ease, color 0.4s ease;
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+.hero {
+    position: relative;
+    z-index: 0;
+    display: flex;
+    align-items: flex-end;
+    height: var(--fixed-vh, 100vh);
+    padding-bottom: 40px;
+    overflow: hidden;
+    background: url('../assets/img/hero-bg.webp') center / cover no-repeat;
+}
+
+.hero__container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+.hero__content {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    color: #fff;
+}
+
+.hero__title {
+    margin-bottom: 10px;
+    line-height: 98%;
+    color: #fff;
+    max-width: 465px;
+}
+
+.hero__desc {
+    font-weight: 300;
+    font-size: 24px;
+    color: #fff;
+    max-width: 560px;
+}
+
+.hero__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.hero__availability {
+    font-weight: 300;
+    font-size: 24px;
+    text-decoration: underline;
+    text-decoration-skip-ink: none;
+    text-align: right;
+    color: #fff;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 5px;
+    transition: opacity 0.25s ease;
+}
+
+.hero__availability:hover {
+    opacity: 0.7;
+}
+
+.hero__catalog {
+    padding: 26px 47px;
+    border: 1px solid #fff;
+    font-weight: 400;
+    font-size: 20px;
+    text-align: center;
+    color: #fff;
+    text-transform: uppercase;
+    transition: background-color 0.25s ease, color 0.25s ease;
+    min-width: 298px;
+}
+
+.hero__catalog:hover {
+    background-color: #fff;
+    color: #000;
+}
+/* ==========================================================================
+   Benefits
+   ========================================================================== */
+.benefits {
+    padding-top: 120px;
+    padding-bottom: 60px;
+}
+
+.benefits__container {
+    display: flex;
+    gap: 10px;
+}
+
+.benefits__left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1 1 50%;
+    padding-bottom: 50px;
+    padding-top: 50px;
+}
+
+.benefits__list {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.benefits__title {
+    display: block;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.benefits__text {
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+    max-width: 647px;
+}
+
+.benefits__note {
+    align-self: flex-end;
+    text-align: right;
+    font-weight: 300;
+    font-size: 20px;
+    max-width: 451px;
+    color: #000;
+}
+
+.benefits__right {
+    flex: 1 1 50%;
+}
+
+.benefits__right img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ==========================================================================
+   Popular
+   ========================================================================== */
+.popular__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.popular__title {
+    color: #000;
+}
+
+.popular__link {
+    color: #000;
+}
+
+.popular__list {
+    display: flex;
+    gap: 10px;
+}
+
+/* slider controls — mobile only */
+.popular__nav,
+.popular__pagination {
+    display: none;
+}
+
+/* extra specificity so it beats .buy__catalog's display */
+.popular .popular__catalog {
+    display: none;
+}
+
+.popular-card {
+    position: relative;
+    flex: 1 1 0;
+}
+
+/* the card is a wrapper; the link holds the image/title/price (the heart button
+   is a sibling, so no interactive element is nested inside the link) */
+.popular-card__link {
+    display: block;
+    position: relative; /* positioning context for the hover image */
+}
+
+/* second image (model wearing the coat) that crossfades in over the product
+   photo on hover — same box as .popular-card__img, absolute so it doesn't
+   shift layout and stays out of the mobile grid */
+.popular-card__img--hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+.popular-card:hover .popular-card__img--hover {
+    opacity: 1;
+}
+
+/* article cards ("Читайте также" on care & post): zoom the image on hover like
+   the blog cards. The media wrapper clips the zoom on ALL sides (incl. bottom)
+   so it never spills onto the title — the card's own overflow can't do that. */
+.popular-card__media {
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.popular-card__media .popular-card__img {
+    margin-bottom: 0;
+    transition: transform 0.5s ease;
+}
+
+.popular-card:hover .popular-card__media .popular-card__img {
+    transform: scale(1.05);
+}
+
+.popular-card__fav {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: #fff;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* reveal on hover, and on KEYBOARD focus of the card link or the heart itself
+   (:has(:focus-visible), not :focus-within) — so Tab users can see/reach it, but
+   a mouse click on the heart doesn't leave it stuck visible after the pointer
+   moves away (mouse focus isn't focus-visible) */
+.popular-card:hover .popular-card__fav,
+.popular-card:has(:focus-visible) .popular-card__fav {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popular-card__fav img {
+    width: 24px;
+    height: 24px;
+}
+
+/* filled heart that fades in over the outline when favorited */
+.popular-card__fav::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    transform: translate(-50%, -50%);
+    background: url('../assets/icons/favorite-filled.svg') center / contain no-repeat;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.popular-card__fav.is-active::after {
+    opacity: 1;
+}
+
+.popular-card__img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    object-fit: cover;
+}
+
+.popular-card__title {
+    margin-bottom: 8px;
+    font-weight: 400;
+    font-size: 24px;
+    color: #000;
+}
+
+.popular-card__price {
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+/* ==========================================================================
+   Material
+   ========================================================================== */
+.material {
+    padding-bottom: 120px;
+}
+
+.material__container {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    padding-right: 64px;
+}
+
+.material__image {
+    flex-shrink: 0;
+}
+
+.material__content {
+    max-width: 892px;
+    margin-top: 50px;
+}
+
+.material__title {
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.material__text {
+    display: flex;
+    flex-direction: column;
+    gap: 37px;
+}
+
+.material__text p {
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+/* ==========================================================================
+   Buy
+   ========================================================================== */
+.buy {
+    padding-top: 80px;
+    padding-bottom: 80px;
+    background-color: #F9F9F9;
+}
+
+.buy__title {
+    margin-bottom: 47px;
+    text-align: center;
+    color: #000;
+}
+
+.buy__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.buy__steps {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 47px;
+    width: 100%;
+}
+
+.buy__step {
+    flex: 0 1 505px;
+}
+
+.buy__number {
+    display: block;
+    margin-bottom: 20px;
+    font-family: 'Arapey', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 147px;
+    line-height: 0.65;
+    letter-spacing: -0.08em;
+    color: rgba(0, 0, 0, 0.2);
+}
+
+.buy__text {
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.buy__catalog {
+    display: inline-block;
+    border-color: #000;
+    color: #000;
+}
+
+.buy__catalog:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+/* ==========================================================================
+   Reviews
+   ========================================================================== */
+.reviews {
+    padding-top: 120px;
+    padding-bottom: 120px;
+}
+
+.reviews__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.reviews__title {
+    color: #000;
+}
+
+/* slider controls — mobile only */
+.reviews__nav,
+.reviews__pagination {
+    display: none;
+}
+
+.reviews__list {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.review-card {
+    flex: 1 1 0;
+}
+
+.review-card__img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    object-fit: cover;
+}
+
+.review-card__name {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 400;
+    font-size: 24px;
+    color: #000;
+}
+
+.review-card__text {
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+.review-card--double {
+    display: flex;
+    flex-direction: column;
+    gap: 120px;
+    padding-top: 50px;
+}
+
+.review-card--last {
+    padding-top: 110px;
+}
+
+.review-card__text--last {
+    margin-bottom: 165px;
+}
+
+/* ==========================================================================
+   Showroom
+   ========================================================================== */
+.showroom {
+    padding-top: 222px;
+    padding-bottom: 222px;
+    background: url('../assets/img/showroom-bg.webp') center / cover no-repeat;
+    color: #fff;
+}
+
+.showroom__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.showroom__title {
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.showroom__desc {
+    max-width: 528px;
+    margin-bottom: 30px;
+    font-weight: 300;
+    font-size: 24px;
+    text-align: center;
+    color: #fff;
+}
+
+.showroom__btn {
+    min-width: 298px;
+}
+
+/* ==========================================================================
+   FAQ
+   ========================================================================== */
+.faq {
+    padding-top: 120px;
+    padding-bottom: 0;
+}
+
+.faq__item {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    padding-bottom: 40px;
+    cursor: pointer;
+}
+
+.faq__item:first-child {
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.faq__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    width: 100%;
+    padding-top: 40px;
+    padding-right: 55px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.faq__question {
+    color: #000;
+}
+
+.faq__chevron {
+    flex-shrink: 0;
+    width: 36px;
+    height: 21px;
+    transition: transform 0.35s ease;
+}
+
+.faq__item.active .faq__chevron {
+    transform: rotate(180deg);
+}
+
+/* keyboard focus: the whole row is the button, but show the ring only on the
+   chevron so it reads as a compact toggle instead of framing the full width */
+.faq__header:focus-visible {
+    outline: none;
+}
+
+.faq__header:focus-visible .faq__chevron {
+    outline: 2px solid currentColor;
+    outline-offset: 8px;
+    border-radius: 2px;
+}
+
+.faq__answer {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease;
+}
+
+.faq__item.active .faq__answer {
+    grid-template-rows: 1fr;
+}
+
+.faq__answer-inner {
+    overflow: hidden;
+}
+
+.faq__text {
+    max-width: 915px;
+    margin-left: auto;
+    padding-top: 26px;
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+/* ==========================================================================
+   CTA
+   ========================================================================== */
+.cta {
+    padding-top: 120px;
+    padding-bottom: 120px;
+}
+
+.cta__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.cta__title {
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.cta__desc {
+    max-width: 560px;
+    margin-bottom: 30px;
+    font-weight: 300;
+    font-size: 24px;
+    text-align: center;
+    color: #000;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.footer__top {
+    padding-top: 40px;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    margin-bottom: 40px;
+}
+
+.footer__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: start;
+    justify-self: start;
+}
+
+.footer__link {
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+    transition: opacity 0.25s ease;
+}
+
+.footer__link:hover {
+    opacity: 0.7;
+}
+
+.footer__center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    justify-self: center;
+}
+
+.footer__socials {
+    display: flex;
+    gap: 14px;
+}
+
+.footer__social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    transition: opacity 0.25s ease;
+}
+
+.footer__social:hover {
+    opacity: 0.7;
+}
+
+.footer__dev {
+    font-weight: 300;
+    font-size: 19px;
+    color: #000;
+    opacity: 0.58;
+}
+
+.footer__dev a {
+    text-underline-offset: 2px;
+    text-decoration: underline;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: 1px;
+}
+
+.footer__policy {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    justify-self: end;
+}
+
+.footer__policy-links {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: start;
+}
+
+.footer__copyright {
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.footer__logo {
+    display: flex;
+    justify-content: center;
+}
+
+.footer__social--telegram img {
+    width: 23px;
+    height: 21px;
+}
+
+/* ==========================================================================
+   Menu (dropdown)
+   ========================================================================== */
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background-color: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100%;
+    max-height: var(--fixed-vh, 100vh);
+    overflow-y: auto;
+    transform: translateY(-101%);
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+}
+
+.menu.active {
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.menu__panel {
+    position: relative;
+    padding-top: 33px;
+    padding-bottom: 40px;
+    background-color: #fff;
+}
+
+.menu__close {
+    position: absolute;
+    top: 50px;
+    left: 40px;
+    display: flex;
+    transition: opacity 0.25s ease;
+}
+
+.menu__close:hover {
+    opacity: 0.6;
+}
+
+.menu__logo {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 50px;
+}
+
+.menu__body {
+    display: flex;
+    gap: 164px;
+}
+
+.menu__nav {
+    flex: 1;
+}
+
+.menu__link {
+    display: block;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    color: #000;
+    transition: opacity 0.25s ease;
+}
+
+.menu__link:last-child {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.menu__link:hover {
+    opacity: 0.5;
+}
+
+.menu__preview {
+    display: grid;
+}
+
+.menu__card {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.menu__card--active {
+    pointer-events: auto;
+}
+
+.menu__desc {
+    margin-bottom: 26px;
+    font-weight: 300;
+    font-size: 20px;
+    text-align: right;
+    color: #000;
+    max-width: 762px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* fade the new description in a beat later so it never overlaps the old text */
+.menu__card--active .menu__desc {
+    opacity: 1;
+    transition: opacity 0.3s ease 0.15s;
+}
+
+.menu__img {
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.menu__card--active .menu__img {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   Popup
+   ========================================================================== */
+.popup {
+    position: fixed;
+    inset: 0;
+    z-index: 110;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.popup.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.popup__window {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    max-width: 100%;
+    /* cap at the design height (933) so a tall screen doesn't force a stray
+       scroll; on a short screen fall back to the viewport minus the .popup
+       padding, and the body scrolls inside */
+    max-height: min(933px, calc(var(--fixed-vh, 100vh) - 80px));
+}
+
+.popup__image {
+    position: relative;
+    flex-shrink: 0;
+    width: 607px;
+}
+
+.popup__image img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.popup__body {
+    position: relative;
+    width: 607px;
+    max-width: 100%;
+    padding: 30px;
+    background-color: #fff;
+    overflow-y: auto;
+}
+
+.popup__close {
+    position: absolute;
+    top: 42px;
+    right: 42px;
+    display: flex;
+    transition: opacity 0.25s ease;
+}
+
+.popup__close:hover {
+    opacity: 0.6;
+}
+
+.popup__title {
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.popup__desc {
+    margin-bottom: 30px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+    max-width: 510px;
+}
+
+.popup__inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.popup__input {
+    width: 100%;
+    padding-bottom: 10px;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    background-color: transparent;
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+.popup__input::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.popup__input:focus {
+    outline: none;
+    border-bottom-color: #000;
+}
+
+/* JustValidate: wrapper added around each validated input; the error is
+   absolute so showing it never nudges the form layout */
+.popup__field {
+    position: relative;
+}
+
+.popup__error {
+    margin: 0;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 1;
+    color: #000 !important;
+    /* JustValidate inserts this element on failure, so the animation plays
+       once on each reveal — a soft fade + slide instead of a hard pop */
+    animation: popup-error-in 0.28s ease both;
+}
+
+@keyframes popup-error-in {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* error sits on the input's line, right-aligned (like the design) */
+.popup__field .popup__error {
+    position: absolute;
+    top: 0;
+    right: 0;
+    max-width: 60%;
+    text-align: right;
+    pointer-events: none;
+}
+
+/* the agree checkbox shows no text error (it would push the layout down) —
+   the invalid state is marked on the box itself instead (see below) */
+.popup__agree-error {
+    display: none;
+}
+
+.popup__label {
+    position: relative;
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+/* required-group error sits on the label's line, to its right */
+.popup__group-error {
+    position: absolute;
+    top: 0;
+    right: 0;
+    pointer-events: none;
+}
+
+.popup__checks {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    column-gap: 40px;
+    row-gap: 13px;
+    margin-bottom: 38px;
+}
+
+.popup__check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 300;
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.51);
+    cursor: pointer;
+}
+
+.popup__check-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.popup__box {
+    position: relative;
+    flex-shrink: 0;
+    width: 19px;
+    height: 19px;
+    border: 1px solid #000;
+    transition: border-color 0.2s ease;
+}
+
+.popup__box::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 11px;
+    height: 11px;
+    background-color: #000;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+}
+
+.popup__check:hover .popup__box {
+    border-color: rgba(0, 0, 0, 0.7);
+}
+
+.popup__check-input:checked + .popup__box {
+    border-color: #000;
+}
+
+.popup__check-input:checked + .popup__box::after {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.popup__check-input:focus-visible + .popup__box {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+}
+
+/* invalid agree checkbox: bold ring + faint fill draw attention without a text
+   label (kept static — JustValidate re-adds the class on every re-render) */
+.popup__agree .popup__check-input.popup__input--invalid + .popup__box {
+    box-shadow: 0 0 0 2px #000;
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+.popup__agree {
+    margin-bottom: 40px;
+    justify-self: center;
+}
+
+.popup__agree a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration: underline;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: 1px;
+}
+
+.popup__submit {
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   Popup — thank-you state
+   ========================================================================== */
+.popup__window {
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.popup.submitted .popup__window {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.popup__thanks {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 606px;
+    height: 606px;
+    max-width: 100%;
+    padding: 40px;
+    text-align: center;
+    background: #fff url('../assets/img/thanks-bg.png') center / cover no-repeat;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.popup.submitted .popup__thanks {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup__thanks-title {
+    margin-bottom: 30px;
+    color: #000;
+}
+
+.popup__thanks-lead {
+    margin-bottom: 10px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.popup__thanks-text {
+    margin-bottom: 38px;
+    font-weight: 300;
+    font-size: 20px;
+    text-align: center;
+    color: #000;
+    max-width: 390px;
+}
+
+/* ==========================================================================
+   Search (dropdown)
+   ========================================================================== */
+.search-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background-color: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.search-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.search {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100%;
+    max-height: var(--fixed-vh, 100vh);
+    overflow-y: auto;
+    transform: translateY(-101%);
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+}
+
+.search.active {
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.search__panel {
+    position: relative;
+    padding-top: 33px;
+    padding-bottom: 40px;
+    background-color: #fff;
+}
+
+.search__close {
+    position: absolute;
+    top: 50px;
+    left: 40px;
+    display: flex;
+    transition: opacity 0.25s ease;
+}
+
+.search__close:hover {
+    opacity: 0.6;
+}
+
+.search__logo {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 50px;
+}
+
+.popular__link--search {
+    display: none;
+}
+
+.search__form {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    max-width: 606px;
+    margin: 0 auto 167px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    transition: border-color 0.25s ease;
+}
+
+.search__form:focus-within {
+    border-bottom-color: #000;
+}
+
+.search__input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background-color: transparent;
+    font-family: inherit;
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+.search__input:focus {
+    outline: none;
+}
+
+.search__input::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.search__input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.search__clear {
+    flex-shrink: 0;
+    font-weight: 300;
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.51);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: color 0.25s ease, opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.search__input:not(:placeholder-shown) ~ .search__clear {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.search__clear:hover {
+    color: #000;
+}
+
+/* ==========================================================================
+   Search — suggestions dropdown + results grid
+   ========================================================================== */
+/* box wraps the form so the suggestions can anchor right under the input
+   without the form's large bottom gap pushing them down */
+.search__box {
+    position: relative;
+    z-index: 5; /* keep the dropdown stacked above the results grid below */
+    max-width: 606px;
+    margin: 0 auto 167px;
+}
+
+.search__box .search__form {
+    max-width: none;
+    margin: 0;
+}
+
+/* floating autocomplete panel: solid white with a cap on height so a long list
+   scrolls inside itself instead of spilling down over the result cards */
+.search__suggest {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 15px;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 240px;
+    overflow-y: auto;
+    padding: 18px 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+}
+
+.search__suggest.is-open {
+    display: flex;
+}
+
+.search__suggest-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: inherit;
+    font-weight: 300;
+    font-size: 20px;
+    text-align: left;
+    color: #000;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+/* one highlight for both mouse hover and keyboard (is-active) */
+.search__suggest-item:hover,
+.search__suggest-item.is-active {
+    opacity: 0.6;
+}
+
+.search__suggest-item img {
+    flex-shrink: 0;
+    width: 11px;
+    height: 11px;
+}
+
+/* "nothing found" message — 40px below the input; absolute so it doesn't change
+   the box height (keeps the suggestions anchored right under the field) */
+.search__empty {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 40px;
+    display: none;
+    text-align: center;
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+.search__empty.is-visible {
+    display: block;
+    animation: search-fade-up 0.3s ease both;
+}
+
+/* results state: swap the "may be interesting" slider for the results grid */
+.search__results {
+    display: none;
+}
+
+.search.has-results .search__popular {
+    display: none;
+}
+
+.search.has-results .search__results {
+    display: block;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* "Очистить": fade the results out before swapping back to the slider */
+.search.has-results .search__results.is-leaving {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+/* and fade the "may be interesting" block back in once it returns */
+.search__popular.is-entering {
+    animation: search-fade-up 0.4s ease both;
+}
+
+/* reuses .hero__availability + .popular__link styling, with hover cancelled */
+.search__count {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-align: left;
+    cursor: default;
+}
+
+.search__count:hover {
+    opacity: 1;
+}
+
+.search__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 10px;
+    row-gap: 20px;
+}
+
+/* entrance animations for the suggestions, count and result cards */
+@keyframes search-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search__suggest.is-open .search__suggest-item {
+    /* backwards (not both): applies the start frame during the stagger delay to
+       avoid a flash, but releases the properties after the animation ends so the
+       :hover / .is-active opacity works */
+    animation: search-fade-up 0.3s ease backwards;
+    animation-delay: calc(var(--d, 0) * 0.05s);
+}
+
+.search.has-results .search__count {
+    animation: search-fade-up 0.35s ease both;
+}
+
+.search__grid .popular-card {
+    animation: search-fade-up 0.4s ease both;
+    animation-delay: calc(0.1s + var(--d, 0) * 0.06s);
+}
+
+/* ==========================================================================
+   Cookie consent banner
+   ========================================================================== */
+/* full-screen dim; window pinned to the bottom center. Sits below the popups
+   (z 110) but above the header (z 50). Hidden until JS adds .is-open — the dim
+   fades in and the window slides up from below. */
+.cookie {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.cookie.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.cookie__window {
+    width: 100%;
+    max-width: 980px;
+    padding: 52px 44px;
+    background-color: #fff;
+    text-align: center;
+    transform: translateY(40px);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cookie.is-open .cookie__window {
+    transform: translateY(0);
+}
+
+.cookie__title {
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.cookie__desc {
+    margin-bottom: 30px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.cookie__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}

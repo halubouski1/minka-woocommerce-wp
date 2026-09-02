@@ -1,0 +1,202 @@
+/* ==========================================================================
+   Catalog page
+   ========================================================================== */
+
+/* The header is always solid white here (no dark hero to sit over),
+   so it doesn't depend on the scroll-driven .header--light toggle. */
+.header {
+    background-color: #fff;
+    color: #000;
+}
+
+.header__btn,
+.header__phone {
+    color: #000;
+}
+
+.header img {
+    filter: invert(1);
+}
+
+/* ==========================================================================
+   Catalog section
+   ========================================================================== */
+.catalog {
+    padding-top: 142px;
+}
+
+.catalog__title {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #000;
+}
+
+.catalog__breadcrumbs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.catalog__crumb {
+    transition: opacity 0.25s ease;
+}
+
+.catalog__crumb:not(.catalog__crumb--current):hover {
+    opacity: 0.6;
+}
+
+.catalog__crumb--current {
+    font-weight: 400;
+}
+
+/* faq */
+.faq__item:last-child {
+    border-bottom: none;
+}
+/* ==========================================================================
+   About us
+   ========================================================================== */
+.about {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+}
+
+/* left: all the text content */
+.about__left {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* right: tall image, matches the left column's height */
+.about__main {
+    flex: 0 0 42%;
+    align-self: stretch;
+}
+
+.about__main img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- top: heading + two paragraphs --- */
+.about__top {
+    max-width: 760px;
+    margin-bottom: 65px;
+}
+
+.about__title {
+    margin-bottom: 10px;
+    max-width: 540px;
+    font-size: 34px;
+}
+
+.about__text {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+.about__text p {
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+/* --- bottom: text column (left) + stats (right) --- */
+.about__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 40px;
+}
+
+.about__bottom-left {
+    display: flex;
+    flex-direction: column;
+    max-width: 607px;
+}
+
+.about__subtitle {
+    margin-bottom: 10px;
+    font-size: 34px;
+    color: #000;
+}
+
+.about__desc {
+    max-width: 570px;
+    margin-bottom: 130px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.about__img {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+}
+
+.about__left .about__img {
+    margin-left: -40px;
+}
+
+/* stats: 4 blocks spread over the column height */
+.about__stats {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 35px;
+    flex-shrink: 0;
+    padding-top: 80px;
+}
+
+.about__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+}
+
+.about__label-br {
+    display: none;
+}
+
+.about__num {
+    font-family: 'Arapey', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 105px;
+    line-height: 0.7;
+    letter-spacing: -3px;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.2);
+}
+
+.about__label {
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.about__plus {
+    position: relative;
+    top: -8px;
+    right: -8px;
+}
+
+.about__num-sub {
+    font-family: 'Cormorant Garamond', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 70px;
+    letter-spacing: -0.08em;
+    text-transform: uppercase;
+    color: #ccc;
+}

@@ -1,0 +1,167 @@
+/* ==========================================================================
+   Catalog page
+   ========================================================================== */
+
+/* The header is always solid white here (no dark hero to sit over),
+   so it doesn't depend on the scroll-driven .header--light toggle. */
+.header {
+    background-color: #fff;
+    color: #000;
+}
+
+.header__btn,
+.header__phone {
+    color: #000;
+}
+
+.header img {
+    filter: invert(1);
+}
+
+/* ==========================================================================
+   Catalog section
+   ========================================================================== */
+.catalog {
+    padding-top: 142px;
+}
+
+.catalog__title {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #000;
+}
+
+.catalog__breadcrumbs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.catalog__crumb {
+    transition: opacity 0.25s ease;
+}
+
+.catalog__crumb:not(.catalog__crumb--current):hover {
+    opacity: 0.6;
+}
+
+.catalog__crumb--current {
+    font-weight: 400;
+}
+
+/* faq */
+.faq__item:last-child {
+    border-bottom: none;
+}
+/* ==========================================================================
+   Contacts
+   ========================================================================== */
+.contacts {
+    display: flex;
+    gap: 165px;
+    padding-bottom: 120px;
+}
+
+.contacts__right {
+    padding-top: 50px;
+}
+
+.contacts__title {
+    font-size: 35px;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.contacts__desc {
+    max-width: 710px;
+    margin-bottom: 53px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.contacts__image--end {
+    display: none;
+}
+
+/* phone/email + social buttons — indented and centered */
+.contacts__details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding-left: 150px;
+}
+
+.contacts__row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.contacts__value {
+    font-family: 'Cormorant Garamond', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 43px;
+    text-transform: uppercase;
+    color: #000;
+    transition: opacity 0.25s ease;
+}
+
+.contacts__value:hover {
+    opacity: 0.6;
+}
+
+.contacts__socials {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contacts__social {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.contacts__social:hover img {
+    filter: invert(1);
+}
+
+/* ==========================================================================
+   Contact form section (popup markup reused inline, not as an overlay)
+   ========================================================================== */
+.contact-form {
+    padding-top: 120px;
+}
+
+/* neutralise the overlay behaviour of .popup so it sits in the page flow */
+.popup--inline {
+    position: relative;   /* still the containing block for the absolute thanks */
+    z-index: auto;
+    padding: 0;
+    background-color: transparent;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.popup--inline .popup__window {
+    max-height: none;
+}
+
+.popup--inline .popup__body {
+    overflow-y: visible;
+    background-color: #f9f9f9;
+}
+
+.popup__check {
+    color: #000;
+}

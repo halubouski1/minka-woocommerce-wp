@@ -1,0 +1,30 @@
+services:
+  db:
+    image: mariadb:11
+    restart: always
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:latest
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "9000:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - ./theme:/var/www/html/wp-content/themes/custom-theme
+      - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+
+volumes:
+  db_data:

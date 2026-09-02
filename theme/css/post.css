@@ -1,0 +1,234 @@
+/* ==========================================================================
+   Catalog page
+   ========================================================================== */
+
+/* The header is always solid white here (no dark hero to sit over),
+   so it doesn't depend on the scroll-driven .header--light toggle. */
+.header {
+    background-color: #fff;
+    color: #000;
+}
+
+.header__btn,
+.header__phone {
+    color: #000;
+}
+
+.header img {
+    filter: invert(1);
+}
+
+/* ==========================================================================
+   Catalog section
+   ========================================================================== */
+.catalog {
+    padding-top: 142px;
+}
+
+.catalog__breadcrumbs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 30px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.catalog__crumb {
+    transition: opacity 0.25s ease;
+}
+
+.catalog__crumb:not(.catalog__crumb--current):hover {
+    opacity: 0.6;
+}
+
+.catalog__crumb--current {
+    font-weight: 400;
+}
+
+/* ==========================================================================
+   Blog post — one wrapper (max 915, centered) + base selectors
+   ========================================================================== */
+.post {
+    max-width: 915px;
+    margin: 0 auto;
+}
+
+.post a {
+    text-decoration: underline;
+    text-decoration-color: #000;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+.post__main {
+    display: block;
+    height: auto;
+    margin: 0 auto 20px;
+}
+
+.post h1 {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #000;
+}
+
+.post h2 {
+    margin-bottom: 20px;
+    font-weight: 400;
+    font-size: 29px;
+    color: #000;
+}
+
+.post h3 {
+    margin-bottom: 16px;
+    font-weight: 400;
+    font-size: 24px;
+    color: #000;
+}
+
+.post p {
+    margin: 0;
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+.post ul {
+    list-style: disc;
+    list-style-position: inside;
+}
+
+.post ol {
+    list-style: decimal;
+    list-style-position: inside;
+    padding-inline-start: 0;
+    margin: 0;
+}
+
+.post ul li, .post ol li {
+    font-weight: 300;
+    font-size: 20px;
+    color: #000;
+}
+
+/* paragraph groups: flex column, 35px between paragraphs */
+.post__text {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+    margin-bottom: 30px;
+}
+
+/* image + caption in one block, 10px apart */
+.post__figure {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.post__figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.post__caption {
+    text-align: center;
+    font-weight: 300;
+    font-size: 18px;
+    color: #000;
+}
+
+.post__text:last-child{
+    margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Blog post — table
+   ========================================================================== */
+/* horizontal scroll on narrow screens so the grid never crushes */
+.post__table-wrap {
+    margin-bottom: 30px;
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+}
+
+.post__table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+    /* fixed layout: every column gets an equal, capped share of the table
+       width, and content wraps inside it instead of stretching the cell */
+    table-layout: fixed;
+    text-align: center;
+}
+
+.post__table th,
+.post__table td {
+    overflow-wrap: break-word;
+}
+
+.post__table th,
+.post__table td {
+    padding: 18px;
+    font-size: 18px;
+    color: #000;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+/* no divider on the right edge */
+.post__table th:last-child,
+.post__table td:last-child {
+    border-right: none;
+}
+
+/* column headers (top row) */
+.post__table thead th {
+    font-weight: 500;
+}
+
+/* row headers (first column) — left-aligned, bold */
+.post__table tbody th {
+    text-align: left;
+    font-weight: 500;
+}
+
+/* data cells — lighter weight and tone */
+.post__table td {
+    font-weight: 300;
+    color: #555;
+}
+
+/* first column always left-aligned */
+.post__table th:first-child,
+.post__table td:first-child {
+    text-align: left;
+}
+
+/* empty top-left corner */
+.post__table-corner {
+    padding: 0;
+}
+
+/* zebra striping — odd rows shaded so the first row is striped too */
+.post__table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.post__table thead tr {
+    background-color: #f9f9f9;
+}
+
+.post__table-wrap:last-child{
+    margin-bottom: 0;
+}
+
+/* popular */
+.popular {
+    padding-top: 120px;
+    padding-bottom: 120px;
+}

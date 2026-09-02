@@ -1,0 +1,135 @@
+/* ==========================================================================
+   Catalog page
+   ========================================================================== */
+
+/* The header is always solid white here (no dark hero to sit over),
+   so it doesn't depend on the scroll-driven .header--light toggle. */
+.header {
+    background-color: #fff;
+    color: #000;
+}
+
+.header__btn,
+.header__phone {
+    color: #000;
+}
+
+.header img {
+    filter: invert(1);
+}
+
+/* ==========================================================================
+   Catalog section
+   ========================================================================== */
+.catalog {
+    height: var(--fixed-vh, 100vh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notfound {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.notfound__img {
+    margin-right: 1%;
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* "страница не найдена" — right under the image, no gap */
+.notfound__label {
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.notfound__title {
+    margin-top: 55px;
+}
+
+.notfound__text {
+    margin-top: 20px;
+    font-weight: 300;
+    font-size: 24px;
+    color: #000;
+}
+
+.notfound__btn {
+    margin-top: 30px;
+}
+
+/* hero__availability is white by default — make it black on this light page */
+.notfound__home {
+    margin-top: 20px;
+    color: #000;
+}
+
+@media (max-width: 1919px) {
+    .notfound__img {
+        width: 425px;
+        margin-right: 2%;
+        height: auto;
+    }
+
+    .notfound__label {
+        font-size: 18px;
+    }
+
+    .notfound__title {
+        margin-top: 42px;
+    }
+
+    .notfound__text {
+        margin-top: 15px;
+        font-size: 18px;
+    }
+
+    .notfound__btn {
+        margin-top: 22px;
+    }
+
+    .notfound__home {
+        margin-top: 15px;
+    }
+}
+
+@media (max-width: 1300px) {
+    .notfound__img {
+        width: 300px;
+    }
+}
+
+@media (max-width: 769px) {
+    .notfound__title {
+        max-width: 400px;
+    }
+}
+
+@media (max-width: 570px) {
+    .notfound__img {
+        width: 188px;
+    }
+
+    .notfound__label {
+        font-size: 14px;
+    }
+
+    .notfound__title {
+        margin-top: 24px;
+        line-height: 97%;
+        max-width: 305px;
+    }
+
+    .notfound__text {
+        margin-top: 4px;
+        font-size: 14px;
+        max-width: 250px;
+    }
+}

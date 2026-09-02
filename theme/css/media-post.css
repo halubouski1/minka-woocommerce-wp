@@ -1,0 +1,177 @@
+@media (max-width: 1919px) {
+    .catalog {
+        padding-top: 106px;
+    }
+
+    .catalog__breadcrumbs {
+        font-size: 18px;
+        margin-bottom: 22px;
+        gap: 11px;
+    }
+
+    .post__main {
+        width: 918px;
+        margin: 0 auto 15px;
+    }
+
+    .post {
+        max-width: 686px;
+    }
+
+    .post h1 {
+        margin-bottom: 22px;
+    }
+
+    .post h2 {
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+
+    .post h3 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    .post p {
+        font-size: 16px;
+    }
+
+    .post ul li, .post ol li {
+        font-size: 16px;
+    }
+
+    .post__text {
+        gap: 26px;
+        margin-bottom: 22px;
+    }
+
+    .post__figure {
+        gap: 8px;
+        margin-bottom: 22px;
+    }
+
+    .post__caption {
+        font-size: 16px;
+    }
+
+    /* table — all base values scaled by 0.75 */
+    .post__table-wrap {
+        margin-bottom: 22.5px;
+    }
+
+    .post__table {
+        min-width: 480px;
+    }
+
+    .post__table th,
+    .post__table td {
+        padding: 13.5px;
+        font-size: 13.5px;
+    }
+
+    /* popular */
+    .popular {
+        padding-top: 90px;
+        padding-bottom: 90px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .post__main {
+        width: 100%;
+    }
+
+    .post {
+        max-width: 100%;
+    }
+
+    /* long article crumb no longer wraps — it truncates with an ellipsis */
+    .catalog__crumb--current {
+        min-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}
+
+@media (max-width: 570px) {
+    .catalog {
+        padding-top: 80px;
+    }
+
+    .catalog__breadcrumbs {
+        font-size: 14px;
+        margin-bottom: 10px;
+        gap: 6px;
+    }
+
+    .post__main {
+        min-height: 200px;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+
+    .post h1 {
+        margin-bottom: 10px;
+    }
+
+    .post h2 {
+        font-size: 17px;
+        margin-bottom: 4px;
+    }
+
+    .post h3 {
+        font-size: 15px;
+        margin-bottom: 4px;
+    }
+
+    .post p {
+        font-size: 14px;
+    }
+
+    .post ul li, .post ol li {
+        font-size: 14px;
+    }
+
+    .post__text {
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .post__figure img {
+        min-height: 200px;
+        object-fit: cover;
+    }
+
+    .post__figure {
+        gap: 4px;
+        margin-bottom: 20px;
+    }
+
+    .post__caption {
+        font-size: 12px;
+    }
+
+    /* auto layout + per-cell min-width so every column stays >= 155px
+       and the wrapper scrolls horizontally when they don't fit */
+    .post__table {
+        table-layout: auto;
+        min-width: 0;
+    }
+
+    .post__table th,
+    .post__table td {
+        min-width: 175px;
+        padding: 15px;
+        font-size: 13px;
+    }
+
+    .post__table-wrap {
+        margin-bottom: 20px;
+    }
+
+    .popular {
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+}

@@ -1,0 +1,266 @@
+@media (max-width: 1919px) {
+    .catalog {
+        padding-top: 106px;
+    }
+
+    .catalog__breadcrumbs {
+        font-size: 18px;
+        margin-bottom: 14px;
+        gap: 11px;
+    }
+
+    .catalog__title {
+        margin-bottom: 22px;
+    }
+
+    .catalog__filter-btn, .catalog__sort {
+        font-size: 18px;
+    }
+
+    .catalog__filter-group {
+        gap: 15px;
+    }
+
+    .catalog__filters {
+        margin-bottom: 22px;
+    }
+
+    .catalog__more {
+        margin-top: 30px;
+    }
+
+    .catalog__option {
+        font-size: 15px;
+    }
+
+    .catalog__box {
+        width: 14px;
+        height: 14px;
+    }
+
+    .catalog__box::after {
+        width: 8px;
+        height: 8px;
+    }
+
+    .catalog__dropdown {
+        gap: 11px;
+        padding: 17px 8px 14px 8px;
+    }
+
+    .catalog__sort-option {
+        font-size: 15px;
+    }
+
+    .catalog__filter-count {
+        font-size: 9px;
+    }
+
+    .catalog__clear {
+        font-size: 14px;
+    }
+
+    .catalog__filters-left {
+        gap: 30px;
+    }
+
+    .catalog__dropdown--price {
+        width: 300px;
+        padding: 22px 15px 15px 15px;
+    }
+
+    .catalog__range-values {
+        font-size: 15px;
+        margin-top: 8px;
+    }
+
+    .catalog__range-summary {
+        font-size: 15px;
+        margin-top: 15px;
+    }
+
+    .catalog__range-input::-webkit-slider-thumb {
+        width: 8px;
+        height: 8px;
+    }
+
+    .catalog__row {
+        gap: 8px;
+    }
+
+    .catalog__quad {
+        column-gap: 8px;
+        row-gap: 15px;
+    }
+}
+
+@media (max-width: 1025px) {
+    /* Rows are stacked here, so the big card no longer needs to match the
+       quad's height — make it a plain grid card, identical to the small ones
+       (image auto-height, title/price/heart in the info row). No 1fr fill or
+       height:100% image (which on iOS Safari overflows under the title/price). */
+    .catalog__feature .popular-card {
+        display: grid;
+    }
+
+    /* grid card here (not the desktop flex column), so dissolve the link again
+       to let img/title/price be grid items */
+    .catalog__feature .popular-card__link {
+        display: contents;
+    }
+
+    .catalog__row {
+        flex-direction: column;
+    }
+
+    /* swap the inline filter bar for a single trigger + offcanvas */
+    .catalog__filters-left {
+        display: none;
+    }
+
+    .catalog__filters-toggle {
+        display: inline-flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .filters,
+    .filters-overlay {
+        display: block;
+    }
+
+    .catalog__option:first-child {
+        margin-top: 15px;
+    }
+
+    .catalog__range-summary {
+        margin-top: 10px;
+    }
+
+    .catalog__range-track {
+        top:auto;
+        margin-top: 5px;
+    }
+
+    .catalog__sort-chevron {
+        display: inline-block;
+    }
+
+    .catalog__sort-filters {
+        margin-top: 2px;
+    }
+    
+}
+
+@media (max-width: 570px) {
+    .catalog {
+        padding-top: 80px;
+    }
+
+    .catalog__breadcrumbs {
+        font-size: 14px;
+        margin-bottom: 8px;
+        gap: 6px;
+    }
+
+    .catalog__title {
+        margin-bottom: 10px;
+    }
+
+    .catalog__filters-toggle {
+        font-size: 14px;
+        gap: 4px;
+    }
+
+    .catalog__filter-btn, .catalog__sort {
+        font-size: 14px;
+        gap: 3px;
+    }
+
+    .catalog__sort-chevron {
+        width: 7px;
+        height: auto;
+    }
+
+    .catalog__filters {
+        margin-bottom: 10px;
+    }
+
+    .catalog__quad {
+        column-gap: 10px;
+    }
+
+    .catalog__row {
+        gap: 15px;
+    }
+
+    .catalog__more {
+        margin-top: 20px;
+    }
+
+    .filters__close {
+        position: static;
+        margin: 0 auto 20px;
+    }
+
+    .filters__close img {
+        width: 18px;
+        height: 18px;
+    }
+
+    .filters__logo img {
+        width: 150px;
+        height: auto;
+    }
+
+    .filters__logo {
+        margin: 0 auto 30px;
+    }
+
+    .filters__label {
+        font-size: 18px;
+    }
+
+    .filters__list {
+        margin-top: 16px;
+        gap: 8px;
+    }
+
+    .filters-acc__btn {
+        font-size: 16px;
+        gap: 4px;
+    }
+
+    .filters-acc__inner {
+        margin-left: 10px;
+        gap: 10px;
+    }
+
+    .catalog__option {
+        font-size: 16px;
+    }
+
+    .filters-acc__chevron {
+        width: 7px;
+        height: auto;
+    }
+
+    .catalog__sort-filters {
+        width: 9px;
+        height: auto;
+        margin-top: 2px;
+    }
+
+    .catalog__option:first-child {
+        margin-top: 10px;
+    }
+
+    .catalog__option:last-child {
+        margin-bottom: 10px;
+    }
+
+    .catalog__sort-option {
+        font-size: 14px;
+    }
+}

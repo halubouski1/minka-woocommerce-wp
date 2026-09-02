@@ -1,0 +1,257 @@
+@media (max-width: 1919px) {
+    .catalog {
+        padding-top: 106px;
+    }
+
+    .catalog__breadcrumbs {
+        font-size: 18px;
+        margin-bottom: 14px;
+        gap: 11px;
+    }
+
+    .catalog__title {
+        margin-bottom: 22px;
+    }
+
+    .about__title {
+        font-size: 25px;
+        max-width: 400px;
+        margin-bottom: 8px;
+    }
+
+    .about__subtitle {
+        font-size: 25px;
+    }
+
+    .about__text p {
+        font-size: 18px;
+    }
+
+    .about__text {
+        gap: 25px;
+    }
+
+    .about__top {
+        max-width: 571px;
+        margin-bottom: 46px;
+    }
+
+    .about__desc {
+        font-size: 18px;
+    }
+
+    .about__img--right {
+        width: 41.3%;
+        height: 100%;
+    }
+
+    .about__desc {
+        margin-bottom: 96px;
+        max-width: 429px;
+    }
+
+    .about__left .about__img {
+        margin-left: -30px;
+        height: 100%;
+    }
+
+    .about {
+        gap: 8px;
+    }
+
+    .about__num {
+        font-size: 80px;
+    }
+
+    .about__stats {
+        gap: 26px;
+        padding-top: 60px;
+    }
+
+    .about__stat {
+        gap: 19px;
+    }
+
+    .about__label {
+        font-size: 18px;
+    }
+
+    .about__num-sub {
+        font-size: 52px;
+    }
+}
+
+@media (max-width: 1300px) {
+    .about__desc br {
+        display: none;
+    }
+
+    .about__img--right {
+        width: 37.3%;
+    }
+}
+
+@media (max-width: 1025px) {
+    .about {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "top     top"
+            "sub     sub"
+            "desc    desc"
+            "stats   main"
+            "leftimg leftimg";
+        column-gap: 20px;
+        row-gap: 0;
+    }
+
+    /* dissolve the wrappers so their children become grid items directly */
+    .about__left,
+    .about__bottom,
+    .about__bottom-left {
+        display: contents;
+    }
+
+    .about__top {
+        grid-area: top;
+        max-width: none;
+        margin-bottom: 40px;
+    }
+
+    .about__subtitle {
+        grid-area: sub;
+        margin-bottom: 10px;
+        font-size: 20px;
+    }
+
+    .about__desc {
+        grid-area: desc;
+        max-width: none;
+        margin-bottom: 40px;
+    }
+
+    .about__stats {
+        grid-area: stats;
+        padding-top: 0;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .about__stat {
+        align-items: center;
+    }
+
+    .about__label {
+        font-size: 16px;
+    }
+
+    .about__title {
+        max-width: 330px;
+        font-size: 20px;
+    }
+
+    /* right image sits next to the stats, filling the row height */
+    .about__img--right {
+        grid-area: main;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        margin-left: 30px;
+    }
+
+    /* left image drops to the bottom, full width */
+    .about__left .about__img {
+        grid-area: leftimg;
+        width: auto;
+        height: auto;
+        margin-top: 40px;
+    }
+}
+
+@media (max-width: 570px) {
+    .catalog {
+        padding-top: 80px;
+    }
+
+    .catalog__breadcrumbs {
+        font-size: 14px;
+        margin-bottom: 8px;
+        gap: 6px;
+    }
+
+    .about__title {
+        max-width: 300px;
+        margin-bottom: 4px;
+        font-size: 18px;
+    }
+
+    .about__text p {
+        font-size: 14px;
+        max-width: 302px;
+    }
+
+    .about__text p br {
+        display: none;
+    }
+
+    .about__text {
+        gap: 18px;
+    }
+
+    .about__top {
+        margin-bottom: 20px;
+    }
+
+    .about__subtitle {
+        margin-bottom: 4px;
+        font-size: 18px;
+    }
+
+    .about__desc {
+        max-width: 340px;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .about__img--right {
+        margin-left: 20px;
+    }
+
+    .about__stats, .about__stat {
+        align-items: start;
+    }
+
+    .about__num {
+        font-size: 60px;
+        letter-spacing: -2px;
+    }
+
+    .about__label {
+        font-size: 14px;
+    }
+
+    .about__label-br {
+        display: inline;
+    }
+
+    .about {
+        gap: 0;
+    }
+
+    .about__num-sub {
+        font-size: 36px;
+    }
+
+    .about__stat {
+        gap: 15px;
+    }
+
+    .about__stats {
+        gap: 20px;
+    }
+
+    .about__left .about__img {
+        margin-top: 20px;
+        width: 79%;
+    }
+}

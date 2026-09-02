@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="icon" href="assets/icons/favicon.ico" sizes="any">
+      <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
+      <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+      <link rel="manifest" href="assets/icons/site.webmanifest">
+      <meta name="theme-color" content="#ffffff">
+      <meta name="robots" content="noindex, follow">
+      <link rel="stylesheet" href="css/aos.css">
+      <link rel="stylesheet" href="css/swiper-bundle.min.css">
+      <link rel="stylesheet" href="css/normalize.css">
+      <link rel="stylesheet" href="css/style.css">
+      <link rel="stylesheet" href="css/media.css">
+      <link rel="stylesheet" href="css/favorites-empty.css">
+      <link rel="stylesheet" href="css/media-favorites-empty.css"> 
+      <script>document.documentElement.style.setProperty("--fixed-vh", window.innerHeight + "px");</script>
+      <title>Minka - Избранное</title>
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Перейти к&nbsp;содержимому</a>
+
+<header class="header">
+    <div class="container header__container">
+        <div class="header__left">
+            <button class="header__btn header__btn--burger" type="button" data-menu-open>
+                <img src="assets/icons/burger-menu.svg" alt="" width="15" height="5">
+                <span>Меню</span>
+            </button>
+            <button class="header__btn header__btn--search" type="button" data-search-open>
+                <img src="assets/icons/search-icon.svg" alt="" width="12" height="12">
+                <span>Поиск</span>
+            </button>
+            <a class="header__btn header__btn--favorites" href="favorites.html">
+                <img src="assets/icons/favorites.svg" alt="" width="12" height="12">
+                <span>Избранное</span>
+            </a>
+        </div>
+
+        <a class="header__logo" href="index.html">
+            <img src="assets/icons/logo.svg" alt="MINKA" width="145" height="26">
+        </a>
+
+        <a class="header__phone" href="tel:+375291234567">
+            <img src="assets/icons/call.svg" alt="" width="10" height="10">
+            <span>+375 (29) 123-45-67</span>
+        </a>
+    </div>
+</header>
+
+<div class="menu-overlay" data-menu-close></div>
+<div class="menu" id="menu" data-lenis-prevent role="dialog" aria-modal="true" aria-label="Главное меню">
+    <div class="menu__panel">
+        <button class="menu__close" type="button" data-menu-close aria-label="Закрыть меню">
+            <img src="assets/icons/close.svg" alt="" width="18" height="18">
+        </button>
+
+        <div class="container">
+            <a class="menu__logo" href="index.html">
+                <img src="assets/icons/logo-dark.svg" alt="MINKA" width="261" height="47">
+            </a>
+
+            <div class="menu__body">
+                <nav class="menu__nav">
+                    <a class="menu__link section-title" href="catalog.html" data-menu-target="catalog">Каталог</a>
+                    <a class="menu__link section-title" href="about-us.html" data-menu-target="about">О&nbsp;нас</a>
+                    <a class="menu__link section-title" href="care.html" data-menu-target="care">Уход за&nbsp;шубой</a>
+                    <a class="menu__link section-title" href="contacts.html" data-menu-target="contacts">Контакты</a>
+                    <a class="menu__link section-title" href="blog.html" data-menu-target="blog">Блог</a>
+                </nav>
+
+                <div class="menu__preview">
+                    <div class="menu__card menu__card--active" data-menu-card="default">
+                        <p class="menu__desc">MINKA&nbsp;— только натуральная норка. Собственное производство, прямые поставки с&nbsp;аукционов, без&nbsp;посредников. Более 200 моделей в&nbsp;наличии и&nbsp;под&nbsp;заказ. Индивидуальная примерка в&nbsp;шоуруме, помощь с&nbsp;выбором <br> и&nbsp;бережный уход&nbsp;— всё, чтобы шуба радовала десятилетиями.</p>
+                        <img class="menu__img" src="assets/img/menu-card-0.webp" alt="" width="915" height="583">
+                    </div>
+                    <div class="menu__card" data-menu-card="catalog">
+                        <p class="menu__desc">Более 200 моделей норковых шуб в&nbsp;наличии и&nbsp;под&nbsp;заказ. От&nbsp;сдержанной классики до&nbsp;актуальных фасонов&nbsp;— каждая модель прошла отбор по&nbsp;качеству меха, кроя и&nbsp;фурнитуры. Коллекция обновляется регулярно.</p>
+                        <img class="menu__img" src="assets/img/menu-card-1.webp" alt="" width="915" height="583">
+                    </div>
+                    <div class="menu__card" data-menu-card="about">
+                        <p class="menu__desc">MINKA&nbsp;— это 12 лет работы с&nbsp;натуральной норкой. Наша специализация&nbsp;— только норковые шубы. Закупаем мех напрямую на&nbsp;международных аукционах, шьём на&nbsp;собственном производстве. Без&nbsp;посредников и&nbsp;лишних наценок.</p>
+                        <img class="menu__img" src="assets/img/menu-card-2.webp" alt="" width="915" height="583">
+                    </div>
+                    <div class="menu__card" data-menu-card="care">
+                        <p class="menu__desc">Норка&nbsp;— живой мех. Несколько простых привычек сохранят блеск, форму и&nbsp;густоту подпушка на&nbsp;много сезонов. Здесь&nbsp;— всё, что&nbsp;мы советуем нашим клиентам: от&nbsp;хранения до&nbsp;поведения в&nbsp;дождь и&nbsp;снег.</p>
+                        <img class="menu__img" src="assets/img/menu-card-3.webp" alt="" width="915" height="583">
+                    </div>
+                    <div class="menu__card" data-menu-card="contacts">
+                        <p class="menu__desc">Шоурум для&nbsp;индивидуальной примерки, телефон для&nbsp;записи и&nbsp;любых вопросов. Приезжайте&nbsp;— покажем модели вживую, поможем с&nbsp;размером и&nbsp;фасоном. Мы на&nbsp;связи удобным вам способом.</p>
+                        <img class="menu__img" src="assets/img/menu-card-4.webp" alt="" width="915" height="583">
+                    </div>
+                    <div class="menu__card" data-menu-card="blog">
+                        <p class="menu__desc">Статьи о&nbsp;мехе, выборе норковой шубы и&nbsp;тонкостях, которые полезно знать перед покупкой. Опыт, наблюдения и&nbsp;рекомендации от&nbsp;команды MINKA.</p>
+                        <img class="menu__img" src="assets/img/menu-card-5.webp" alt="" width="915" height="583">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="search-overlay" data-search-close></div>
+<div class="search" id="search" data-lenis-prevent role="dialog" aria-modal="true" aria-label="Поиск по сайту">
+    <div class="search__panel">
+        <button class="search__close" type="button" data-search-close aria-label="Закрыть поиск">
+            <img src="assets/icons/close.svg" alt="" width="18" height="18">
+        </button>
+
+        <div class="container">
+            <a class="search__logo" href="index.html">
+                <img src="assets/icons/logo-dark.svg" alt="MINKA" width="261" height="47">
+            </a>
+
+            <div class="search__box">
+                <form class="search__form" role="search">
+                    <input class="search__input" type="text" placeholder="Начните искать" aria-label="Поиск по каталогу" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="searchSuggest" aria-autocomplete="list">
+                    <button class="search__clear" type="button" data-search-clear>Очистить</button>
+                </form>
+                <div class="search__suggest" id="searchSuggest" role="listbox" aria-label="Варианты поиска"></div>
+                <p class="search__empty" role="status" aria-live="polite"></p>
+            </div>
+
+            <div class="search__results">
+                <p class="hero__availability popular__link search__count" aria-live="polite" aria-atomic="true">435 результатов</p>
+                <div class="search__grid"></div>
+            </div>
+
+            <div class="popular popular--slider search__popular">
+                <div class="popular__top">
+                    <h2 class="popular__title section-title">Может быть интересно</h2>
+                    <a class="hero__availability popular__link" href="catalog.html">Смотреть каталог</a>
+                    <div class="popular__nav">
+                        <button class="popular__arrow popular__arrow--prev" type="button" aria-label="Предыдущий слайд">
+                            <img src="assets/icons/slider-arrow.svg" alt="" width="10" height="16">
+                        </button>
+                        <button class="popular__arrow popular__arrow--next" type="button" aria-label="Следующий слайд">
+                            <img src="assets/icons/slider-arrow.svg" alt="" width="10" height="16">
+                        </button>
+                    </div>
+                </div>
+
+                <div class="popular__slider">
+                <div class="popular__list">
+                    <div class="popular-card">
+                        <button class="popular-card__fav" type="button" aria-label="В избранное">
+                            <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
+                        </button>
+                        <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                        <p class="popular-card__title">Модель шубы</p>
+                        <p class="popular-card__price">$ 1200</p>
+                        </a>
+                    </div>
+                    <div class="popular-card">
+                        <button class="popular-card__fav" type="button" aria-label="В избранное">
+                            <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
+                        </button>
+                        <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                        <p class="popular-card__title">Модель шубы</p>
+                        <p class="popular-card__price">$ 1200</p>
+                        </a>
+                    </div>
+                    <div class="popular-card">
+                        <button class="popular-card__fav" type="button" aria-label="В избранное">
+                            <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
+                        </button>
+                        <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                        <p class="popular-card__title">Модель шубы</p>
+                        <p class="popular-card__price">$ 1200</p>
+                        </a>
+                    </div>
+                    <div class="popular-card">
+                        <button class="popular-card__fav" type="button" aria-label="В избранное">
+                            <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
+                        </button>
+                        <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                        <p class="popular-card__title">Модель шубы</p>
+                        <p class="popular-card__price">$ 1200</p>
+                        </a>
+                    </div>
+                </div>
+                </div>
+
+                <div class="popular__pagination"></div>
+
+                <a class="hero__availability popular__link popular__link--search" href="catalog.html">Смотреть каталог</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<main id="main-content">
+<section class="catalog" data-aos="fade-up">
+    <div class="container">
+        <nav class="catalog__breadcrumbs" aria-label="Навигационная цепочка">
+            <a class="catalog__crumb" href="index.html">Главная</a>
+            <span class="catalog__sep">/</span>
+            <span class="catalog__crumb catalog__crumb--current" aria-current="page">Избранное</span>
+        </nav>
+        <h1 class="catalog__title section-title">Избранное</h1>
+        <div class="favorites-empty">
+            <h2 class="favorites-empty__title section-title">Вы пока ничего не&nbsp;добавили в&nbsp;избранное</h2>
+            <p class="favorites-empty__text">Перейдите в&nbsp;каталог&nbsp;— мы собрали модели, достойные внимания</p>
+            <a class="hero__catalog buy__catalog favorites-empty__btn" href="catalog.html">В&nbsp;каталог</a>
+        </div>
+    </div>
+</section>
+
+<section class="popular popular--slider section-padding" data-aos="fade-up">
+    <div class="container">
+        <div class="popular__top">
+            <h2 class="popular__title section-title">Популярные модели</h2>
+            <a class="hero__availability popular__link" href="catalog.html">Смотреть каталог</a>
+            <div class="popular__nav">
+                <button class="popular__arrow popular__arrow--prev" type="button" aria-label="Предыдущий слайд">
+                    <img src="assets/icons/slider-arrow.svg" alt="" width="10" height="16">
+                </button>
+                <button class="popular__arrow popular__arrow--next" type="button" aria-label="Следующий слайд">
+                    <img src="assets/icons/slider-arrow.svg" alt="" width="10" height="16">
+                </button>
+            </div>
+        </div>
+
+        <div class="popular__slider">
+        <div class="popular__list">
+            <div class="popular-card">
+                <button class="popular-card__fav" type="button" aria-label="В избранное">
+                    <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
+                </button>
+                <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                <p class="popular-card__title">Модель шубы</p>
+                <p class="popular-card__price">$ 1200</p>
+                </a>
+            </div>
+            <div class="popular-card">
+                <button class="popular-card__fav" type="button" aria-label="В избранное">
+                    <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
+                </button>
+                <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                <p class="popular-card__title">Модель шубы</p>
+                <p class="popular-card__price">$ 1200</p>
+                </a>
+            </div>
+            <div class="popular-card">
+                <button class="popular-card__fav" type="button" aria-label="В избранное">
+                    <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
+                </button>
+                <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                <p class="popular-card__title">Модель шубы</p>
+                <p class="popular-card__price">$ 1200</p>
+                </a>
+            </div>
+            <div class="popular-card">
+                <button class="popular-card__fav" type="button" aria-label="В избранное">
+                    <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
+                </button>
+                <a class="popular-card__link" href="single.html">
+<img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
+<img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
+                <p class="popular-card__title">Модель шубы</p>
+                <p class="popular-card__price">$ 1200</p>
+                </a>
+            </div>
+        </div>
+        </div>
+
+        <div class="popular__pagination"></div>
+
+        <a class="popular__catalog hero__catalog buy__catalog" href="catalog.html">Смотреть каталог</a>
+    </div>
+</section>
+
+<section class="faq section-padding">
+    <div class="container">
+        <ul class="faq__list">
+            <li class="faq__item" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="faq__question section-title">
+                    <button class="faq__header" type="button" aria-expanded="false">
+                        <span class="faq__question section-title">Как&nbsp;отличить натуральную норку от&nbsp;подделки?</span>
+                        <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
+                    </button>
+                </h3>
+                <div class="faq__answer">
+                    <div class="faq__answer-inner">
+                        <p class="faq__text">У&nbsp;натуральной норки мягкая эластичная мездра и&nbsp;живой блеск ворса, густая упругая подпушь; изделие лёгкое и&nbsp;тёплое. Искусственный мех жёстче, ворс одинаковой длины и&nbsp;«стеклянно» блестит. При&nbsp;покупке просите документы и&nbsp;гарантию на&nbsp;изделие.</p>
+                    </div>
+                </div>
+            </li>
+
+            <li class="faq__item" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="faq__question section-title">
+                    <button class="faq__header" type="button" aria-expanded="false">
+                        <span class="faq__question section-title">Можно ли примерить перед покупкой?</span>
+                        <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
+                    </button>
+                </h3>
+                <div class="faq__answer">
+                    <div class="faq__answer-inner">
+                        <p class="faq__text">Да. В&nbsp;нашем шоуруме можно примерить любую понравившуюся модель и&nbsp;оценить посадку, цвет и&nbsp;длину. Запишитесь по&nbsp;телефону&nbsp;— заранее подберём варианты под&nbsp;ваш размер и&nbsp;фасон.</p>
+                    </div>
+                </div>
+            </li>
+
+            <li class="faq__item" data-aos="fade-up" data-aos-delay="300">
+                <h3 class="faq__question section-title">
+                    <button class="faq__header" type="button" aria-expanded="false">
+                        <span class="faq__question section-title">Как&nbsp;выбрать размер, если я&nbsp;в&nbsp;другом городе?</span>
+                        <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
+                    </button>
+                </h3>
+                <div class="faq__answer">
+                    <div class="faq__answer-inner">
+                        <p class="faq__text">Снимите мерки (обхват груди, талии, бёдер, длину рукава и&nbsp;изделия) и&nbsp;пришлите нам&nbsp;— поможем с&nbsp;размером. При&nbsp;необходимости отправим дополнительные фото и&nbsp;видео модели, а&nbsp;обмен по&nbsp;размеру согласуем заранее.</p>
+                    </div>
+                </div>
+            </li>
+
+            <li class="faq__item" data-aos="fade-up" data-aos-delay="400">
+                <h3 class="faq__question section-title">
+                    <button class="faq__header" type="button" aria-expanded="false">
+                        <span class="faq__question section-title">Даёте ли гарантию и&nbsp;возможен ли возврат?</span>
+                        <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
+                    </button>
+                </h3>
+                <div class="faq__answer">
+                    <div class="faq__answer-inner">
+                        <p class="faq__text">На&nbsp;каждое изделие действует гарантия. Возврат и&nbsp;обмен товара надлежащего качества возможны в&nbsp;сроки, установленные законодательством, при&nbsp;сохранении товарного вида, ярлыков и&nbsp;пломб.</p>
+                    </div>
+                </div>
+            </li>
+
+            <li class="faq__item" data-aos="fade-up" data-aos-delay="400">
+                <h3 class="faq__question section-title">
+                    <button class="faq__header" type="button" aria-expanded="false">
+                        <span class="faq__question section-title">Как&nbsp;ухаживать за&nbsp;норковой шубой?</span>
+                        <img class="faq__chevron" src="assets/icons/chevron.svg" alt="" width="28" height="16">
+                    </button>
+                </h3>
+                <div class="faq__answer">
+                    <div class="faq__answer-inner">
+                        <p class="faq__text">Храните шубу на&nbsp;широких плечиках в&nbsp;дышащем чехле, сушите при&nbsp;комнатной температуре без&nbsp;фена и&nbsp;батарей, снег стряхивайте сразу. Не&nbsp;наносите на&nbsp;мех духи и&nbsp;лак. Раз в&nbsp;1–2 сезона&nbsp;— профессиональная меховая чистка.</p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</section>
+
+</main>
+
+<footer class="footer">
+    <div class="container footer__container">
+        <div class="footer__top">
+            <nav class="footer__nav">
+                <a class="footer__link" href="catalog.html">Каталог</a>
+                <a class="footer__link" href="about-us.html">О&nbsp;нас</a>
+                <a class="footer__link" href="care.html">Уход за&nbsp;шубой</a>
+                <a class="footer__link" href="contacts.html">Контакты</a>
+                <a class="footer__link" href="blog.html">Блог</a>
+            </nav>
+
+            <div class="footer__center">
+                <div class="footer__socials">
+                    <a class="footer__social" href="#" aria-label="Instagram">
+                        <img src="assets/icons/ig.svg" alt="" width="24" height="24">
+                    </a>
+                    <a class="footer__social" href="#" aria-label="WhatsApp">
+                        <img src="assets/icons/whatsapp.svg" alt="" width="24" height="24">
+                    </a>
+                    <a class="footer__social footer__social--telegram" href="#" aria-label="Telegram">
+                        <img src="assets/icons/tg.svg" alt="" width="21" height="19">
+                    </a>
+                </div>
+                <p class="footer__dev">Разработка сайта&nbsp;- <a href="https://webways.by" target="_blank" rel="noopener">webways.by</a></p>
+            </div>
+
+            <div class="footer__policy">
+                <nav class="footer__policy-links">
+                    <a class="footer__link" href="privacy-policy.html">Политика конфиденциальности</a>
+                    <a class="footer__link" href="terms-and-conditions.html">Публичная оферта</a>
+                </nav>
+                <span class="footer__copyright">MINKA©2026 copyright. Все права защищены.</span>
+            </div>
+        </div>
+
+        <div class="footer__logo">
+            <img src="assets/icons/footer-logo.svg" alt="MINKA" width="1346" height="235">
+        </div>
+    </div>
+</footer>
+
+<div class="popup" data-popup-window="showroom" role="dialog" aria-modal="true" aria-label="Записаться в шоурум">
+    <div class="popup__window">
+        <div class="popup__image">
+            <img src="assets/img/popup-card-showroom.webp" alt="" width="607" height="737">
+        </div>
+
+        <div class="popup__body" data-lenis-prevent>
+            <button class="popup__close" type="button" data-popup-close aria-label="Закрыть">
+                <img src="assets/icons/close.svg" alt="" width="18" height="18">
+            </button>
+
+            <h2 class="popup__title section-title">Записаться в&nbsp;шоурум</h2>
+            <p class="popup__desc">Оставьте свои данные и&nbsp;мы свяжемся с&nbsp;вами для&nbsp;уточнения деталей</p>
+
+            <form class="popup__form">
+                <div class="popup__inputs">
+                    <input class="popup__input" type="text" placeholder="Имя" aria-label="Имя">
+                    <input class="popup__input" type="tel" placeholder="Телефон" aria-label="Телефон">
+                    <input class="popup__input" type="text" placeholder="Дата" aria-label="Дата">
+                    <input class="popup__input" type="text" placeholder="Время" aria-label="Время">
+                    <input class="popup__input" type="text" placeholder="Комментарий" aria-label="Комментарий">
+                </div>
+
+                <span class="popup__label">Где с&nbsp;вами связаться?</span>
+                <div class="popup__checks">
+                    <label class="popup__check">
+                        <input class="popup__check-input" type="radio" name="contact" value="Телефон">
+                        <span class="popup__box"></span>
+                        <span>Телефон</span>
+                    </label>
+                    <label class="popup__check">
+                        <input class="popup__check-input" type="radio" name="contact" value="WhatsApp">
+                        <span class="popup__box"></span>
+                        <span>WhatsApp</span>
+                    </label>
+                    <label class="popup__check">
+                        <input class="popup__check-input" type="radio" name="contact" value="Вайбер">
+                        <span class="popup__box"></span>
+                        <span>Вайбер</span>
+                    </label>
+                    <label class="popup__check">
+                        <input class="popup__check-input" type="radio" name="contact" value="Telegram">
+                        <span class="popup__box"></span>
+                        <span>Telegram</span>
+                    </label>
+                </div>
+
+                <label class="popup__check popup__agree">
+                    <input class="popup__check-input" type="checkbox" name="agree">
+                    <span class="popup__box"></span>
+                    <span>Я&nbsp;соглашаюсь с <a href="privacy-policy.html">обработкой персональных данных</a></span>
+                </label>
+
+                <button class="hero__catalog buy__catalog popup__submit" type="submit">Отправить заявку</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="popup__thanks" role="status" tabindex="-1">
+        <h2 class="popup__thanks-title section-title">Спасибо!</h2>
+        <span class="popup__thanks-lead">Ваша заявка успешно отправлена.</span>
+        <p class="popup__thanks-text">Мы свяжемся с&nbsp;вами в&nbsp;ближайшее время и&nbsp;уточним все детали.</p>
+        <button class="hero__catalog buy__catalog" type="button" data-popup-close>Хорошо</button>
+    </div>
+</div>
+
+<div class="popup" data-popup-window="cta" role="dialog" aria-modal="true" aria-label="Оставить заявку">
+    <div class="popup__window">
+        <div class="popup__image">
+            <img src="assets/img/popup-card-showroom.webp" alt="" width="607" height="737">
+        </div>
+
+        <div class="popup__body" data-lenis-prevent>
+            <button class="popup__close" type="button" data-popup-close aria-label="Закрыть">
+                <img src="assets/icons/close.svg" alt="" width="18" height="18">
+            </button>
+
+            <h2 class="popup__title section-title">Оставьте контакты</h2>
+            <p class="popup__desc">Сообщим наличие размеров, актуальную цену и&nbsp;пришлём дополнительные фото.</p>
+
+            <form class="popup__form">
+                <div class="popup__inputs">
+                    <input class="popup__input" type="text" placeholder="Имя" aria-label="Имя">
+                    <input class="popup__input" type="tel" placeholder="Телефон" aria-label="Телефон">
+                    <input class="popup__input" type="text" placeholder="Комментарий" aria-label="Комментарий">
+                </div>
+
+                <span class="popup__label">Где с&nbsp;вами связаться?</span>
+                <div class="popup__checks">
+                    <label class="popup__check">
+                        <input class="popup__check-input" type="radio" name="cta-contact" value="Телефон">
+                        <span class="popup__box"></span>
+                        <span>Телефон</span>
+                    </label>
+                    <label class="popup__check">
+                        <input class="popup__check-input" type="radio" name="cta-contact" value="WhatsApp">
+                        <span class="popup__box"></span>
+                        <span>WhatsApp</span>
+                    </label>
+                    <label class="popup__check">
+                        <input class="popup__check-input" type="radio" name="cta-contact" value="Вайбер">
+                        <span class="popup__box"></span>
+                        <span>Вайбер</span>
+                    </label>
+                    <label class="popup__check">
+                        <input class="popup__check-input" type="radio" name="cta-contact" value="Telegram">
+                        <span class="popup__box"></span>
+                        <span>Telegram</span>
+                    </label>
+                </div>
+
+                <label class="popup__check popup__agree">
+                    <input class="popup__check-input" type="checkbox" name="cta-agree">
+                    <span class="popup__box"></span>
+                    <span>Я&nbsp;соглашаюсь с <a href="privacy-policy.html">обработкой персональных данных</a></span>
+                </label>
+
+                <button class="hero__catalog buy__catalog popup__submit" type="submit">Отправить заявку</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="popup__thanks" role="status" tabindex="-1">
+        <h2 class="popup__thanks-title section-title">Спасибо!</h2>
+        <span class="popup__thanks-lead">Ваша заявка успешно отправлена.</span>
+        <p class="popup__thanks-text">Мы свяжемся с&nbsp;вами в&nbsp;ближайшее время и&nbsp;уточним все детали.</p>
+        <button class="hero__catalog buy__catalog" type="button" data-popup-close>Хорошо</button>
+    </div>
+</div>
+
+<div class="popup popup__gift" data-popup-window="gift" role="dialog" aria-modal="true" aria-label="Намекните близкому о подарке">
+    <div class="popup__window">
+        <div class="popup__image">
+            <img src="assets/img/popular-card-1.webp" alt="" width="607" height="737">
+        </div>
+
+        <div class="popup__body" data-lenis-prevent>
+            <button class="popup__close" type="button" data-popup-close aria-label="Закрыть">
+                <img src="assets/icons/close.svg" alt="" width="18" height="18">
+            </button>
+
+            <h2 class="popup__title section-title">Намекните близкому о&nbsp;подарке</h2>
+
+            <div class="popup__gift-text">
+                <p>Здравствуйте, <span class="popup__fill popup__fill--wide" data-fill-target="recipient"></span> !</p>
+                <p>Мы узнали, что <span class="popup__fill" data-fill-target="sender"></span> мечтает о&nbsp;подарке <br> из&nbsp;ателье норковых шуб «MINKA». Мы внимательно относимся к&nbsp;желаниям наших клиентов и&nbsp;решили намекнуть вам об&nbsp;этом.</p>
+                <p>Дарите тепло и&nbsp;будьте внимательны к&nbsp;мечтам близких! Если у&nbsp;вас возникли вопросы или&nbsp;вы хотите обсудить детали, мы всегда готовы помочь.</p>
+            </div>
+
+            <form class="popup__form popup__form--gift">
+                <span class="popup__label">Кому намекнуть</span>
+                <div class="popup__inputs">
+                    <input class="popup__input" type="text" placeholder="Имя" aria-label="Имя" data-fill-source="recipient">
+                    <input class="popup__input" type="email" placeholder="Эл. почта" aria-label="Эл. почта">
+                </div>
+
+                <span class="popup__label">От&nbsp;кого</span>
+                <div class="popup__inputs">
+                    <input class="popup__input" type="text" placeholder="Имя" aria-label="Имя" data-fill-source="sender">
+                    <input class="popup__input" type="email" placeholder="Эл. почта" aria-label="Эл. почта">
+                </div>
+
+                <label class="popup__check popup__agree">
+                    <input class="popup__check-input" type="checkbox" name="agree">
+                    <span class="popup__box"></span>
+                    <span>Я&nbsp;соглашаюсь с <a href="privacy-policy.html">обработкой персональных данных</a></span>
+                </label>
+
+                <button class="hero__catalog buy__catalog popup__submit" type="submit">Отправить заявку</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="popup__thanks" role="status" tabindex="-1">
+        <h2 class="popup__thanks-title section-title">Спасибо!</h2>
+        <span class="popup__thanks-lead">Ваш намёк успешно отправлен.</span>
+        <p class="popup__thanks-text">Мы бережно передадим его вашему близкому.</p>
+        <button class="hero__catalog buy__catalog" type="button" data-popup-close>Хорошо</button>
+    </div>
+</div>
+
+
+<script src="js/aos.js"></script>
+<script src="js/lenis.min.js"></script>
+<script src="js/swiper-bundle.min.js"></script>
+<script src="js/just-validate.production.min.js"></script><script src="js/main.js"></script>
+</body>
+</html>
