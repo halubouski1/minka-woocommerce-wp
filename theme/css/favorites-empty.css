@@ -76,11 +76,6 @@
 .favorites .popular-card__fav {
     opacity: 1;
     visibility: visible;
-    width: auto;
-    height: auto;
-    background-color: transparent;
-    top: 30px;
-    right: 30px;
 }
 
 /* ==========================================================================

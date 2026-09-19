@@ -648,7 +648,11 @@
 
     /* footer */
     .footer__copyright {
-        max-width: 200px;
+        max-width: 202px;
+    }
+
+    .footer__policy {
+        gap: 18px;
     }
 }
 
@@ -801,7 +805,7 @@
     .footer__policy-links {
         max-width: 200px;
         gap: 8px;
-        align-items: end;
+        align-items: start;
     }
 
     .footer__policy-links .footer__link {
@@ -940,6 +944,10 @@
         grid-area: dev;
         justify-self: center;
         text-align: center;
+    }
+
+    .footer__policy-links {
+        align-items: end;
     }
 }
 

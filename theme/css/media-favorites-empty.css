@@ -19,11 +19,6 @@
     padding-top: 0px;
     }
 
-    .favorites .popular-card__fav {
-    top: 22px;
-    right: 22px;
-    }
-
     /* fav empty */
     .favorites-empty__text {
         margin-top: 15px;
@@ -32,13 +27,6 @@
 
     .favorites-empty__btn {
         margin-top: 22px;
-    }
-}
-
-@media (max-width: 1025px) {
-    .favorites .popular-card__fav {
-    top: 5px;
-    right: 5px;
     }
 }
 
@@ -60,11 +48,6 @@
     /* .favorites */
     .favorites {
         padding-bottom: 25px;
-    }
-
-    .favorites .popular-card__fav {
-    top: 0px;
-    right: 0px;
     }
 
     /* fav empty */

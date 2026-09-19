@@ -71,13 +71,10 @@
 }
 /* hearts are pre-filled (is-active in the markup) and always visible here;
    clicking still toggles them off, same as on every other page.
-   scoped to .favorites so the search-panel cards keep their hover-reveal */
+   scoped to .favorites so the search-panel cards keep their hover-reveal.
+   everything else — the white circle, its size, position and the heart inside —
+   stays exactly as on a regular card, at every breakpoint */
 .favorites .popular-card__fav {
     opacity: 1;
     visibility: visible;
-    width: auto;
-    height: auto;
-    background-color: transparent;
-    top: 30px;
-    right: 30px;
 }

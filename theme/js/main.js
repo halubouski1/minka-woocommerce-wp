@@ -1,3 +1,6 @@
+// Пути темы приходят из WordPress (wp_localize_script); фолбэк — относительные пути вёрстки.
+const MINKA = window.minkaTheme || { assets: 'assets', home: '', catalog: 'catalog.html' };
+
 // ========================================
 // Lenis smooth scroll
 // ========================================
@@ -219,13 +222,63 @@ if (menu && menuOpenBtn) {
   let jvCounter = 0;
   const validators = new Map();
 
+  const showThanks = (form) => {
+    const popup = form.closest('.popup');
+    if (!popup) return;
+
+    popup.classList.add('submitted');
+    // move focus to the confirmation so screen readers announce it
+    popup.querySelector('.popup__thanks')?.focus({ preventScroll: true });
+  };
+
+  // The form and its validation stay as designed; a valid submission is handed
+  // to WordPress, which files it in Gravity Forms (entry + notifications).
+  const submitForm = (form) => {
+    const key = form.dataset.minkaForm;
+
+    // no form key (or WordPress data missing) → behave like the static layout
+    if (!key || typeof MINKA === 'undefined' || !MINKA.ajaxUrl) {
+      showThanks(form);
+      return;
+    }
+
+    const button = form.querySelector('.popup__submit');
+    const error = form.querySelector('.popup__send-error');
+    if (error) error.remove();
+    if (button) button.disabled = true;
+
+    const data = new FormData(form);
+    data.append('action', 'minka_form');
+    data.append('minka_form', key);
+    data.append('page', window.location.href);
+
+    fetch(MINKA.ajaxUrl, { method: 'POST', credentials: 'same-origin', body: data })
+      .then((response) => (response.ok ? response.json() : Promise.reject(new Error('http'))))
+      .then((payload) => {
+        if (!payload || !payload.success) throw new Error('payload');
+
+        if (button) button.disabled = false;
+        showThanks(form);
+        form.reset();
+      })
+      .catch(() => {
+        if (button) button.disabled = false;
+
+        // Заявка не ушла — говорим об этом, а не показываем ложное «Спасибо».
+        const message = document.createElement('p');
+        message.className = 'popup__send-error';
+        message.setAttribute('role', 'alert');
+        message.textContent = 'Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.';
+        (button || form).before(message);
+      });
+  };
+
   const setupValidation = (form) => {
     if (typeof JustValidate === 'undefined') {
       // library missing → fall back to the simple "show thanks on submit"
       form.addEventListener('submit', (e) => {
         e.preventDefault();
-        const popup = form.closest('.popup');
-        if (popup) popup.classList.add('submitted');
+        submitForm(form);
       });
       return;
     }
@@ -240,7 +293,15 @@ if (menu && menuOpenBtn) {
     });
 
     form.querySelectorAll('.popup__input').forEach((input) => {
-      if (/коммент|дата|время/i.test(input.placeholder || '')) return; // Комментарий / Дата / Время — optional
+      // Необязательность помечена атрибутом data-optional в разметке.
+      // Раньше она угадывалась по тексту плейсхолдера — переименование
+      // подписи молча делало поле обязательным.
+      const optional = input.hasAttribute('data-optional');
+
+      // Необязательное поле пропускаем — кроме email: он не обязателен, но
+      // если человек его ввёл, формат надо проверить, иначе опечатка молча
+      // испортит сопоставление в рекламных кабинетах.
+      if (optional && input.type !== 'email') return;
 
       if (!input.id) input.id = `jv-field-${++jvCounter}`;
 
@@ -250,7 +311,9 @@ if (menu && menuOpenBtn) {
       input.parentNode.insertBefore(field, input);
       field.appendChild(input);
 
-      const rules = [{ rule: 'required', errorMessage: 'Заполните это поле!' }];
+      const rules = [];
+      if (!optional) rules.push({ rule: 'required', errorMessage: 'Заполните это поле!' });
+
       if (input.type === 'tel') {
         rules.push({
           rule: 'customRegexp',
@@ -258,6 +321,16 @@ if (menu && menuOpenBtn) {
           errorMessage: 'Введите корректный номер',
         });
       }
+
+      if (input.type === 'email') {
+        rules.push({
+          rule: 'customRegexp',
+          // пустое значение допустимо — поле необязательное
+          value: /^$|^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
+          errorMessage: 'Введите корректный email',
+        });
+      }
+
       validator.addField(`#${input.id}`, rules, { errorsContainer: field });
     });
 
@@ -291,15 +364,8 @@ if (menu && menuOpenBtn) {
       );
     }
 
-    // valid → swap the form for the thank-you message (same as before)
-    validator.onSuccess(() => {
-      const popup = form.closest('.popup');
-      if (popup) {
-        popup.classList.add('submitted');
-        // move focus to the confirmation so screen readers announce it
-        popup.querySelector('.popup__thanks')?.focus({ preventScroll: true });
-      }
-    });
+    // valid → send it to WordPress (Gravity Forms), then show the thank-you
+    validator.onSuccess(() => submitForm(form));
 
     validators.set(form, validator);
   };
@@ -405,7 +471,7 @@ if (searchPanel && searchOpenBtn) {
 }
 
 // ========================================
-// Search — suggestions + results (demo, no backend yet)
+// Search — suggestions + results (products come from WordPress)
 // ========================================
 (function () {
   const panel = document.getElementById('search');
@@ -418,11 +484,11 @@ if (searchPanel && searchOpenBtn) {
   const clearBtn = panel.querySelector('[data-search-clear]');
   if (!input || !suggest || !grid) return;
 
-  // demo dataset — swap for real model names when there's a backend
-  const MODELS = ['Елена', 'Еленина', 'Елука2', 'Милана', 'Виктория', 'Астра', 'Флоренция', 'Модель шубы'];
+  // the shortest query worth asking the server about
+  const MIN_CHARS = 2;
 
-  // how many result cards to render per search (demo)
-  const RESULTS_COUNT = 8;
+  // typing shouldn't fire a request per keystroke
+  const TYPE_DELAY = 250;
 
   // Russian plural for "результат": 1 → результат, 2-4 → результата, else → результатов
   const plural = (n) => {
@@ -433,19 +499,27 @@ if (searchPanel && searchOpenBtn) {
     return 'результатов';
   };
 
-  // i drives the staggered entrance animation (--d)
-  const cardHTML = (i) => `
-    <div class="popular-card" style="--d:${i}">
-      <button class="popular-card__fav" type="button" aria-label="В избранное">
-        <img src="assets/icons/favorite.svg" alt="" width="24" height="24">
-      </button>
-      <a class="popular-card__link" href="single.html">
-        <img class="popular-card__img" src="assets/img/popular-card-1.webp" alt="Модель шубы" width="452" height="535">
-        <img class="popular-card__img popular-card__img--hover" src="assets/img/review-card-1.webp" alt="" width="452" height="535" aria-hidden="true">
-        <p class="popular-card__title">Модель шубы</p>
-        <p class="popular-card__price">$ 1200</p>
-      </a>
-    </div>`;
+  // Products live in WordPress, so both the suggestions and the result cards
+  // come from there; the cards are the same markup as everywhere else.
+  let request = null;
+
+  const ask = (term, mode) => {
+    if (request) request.abort();
+    request = new AbortController();
+
+    const url = `${MINKA.ajaxUrl}?action=minka_search&mode=${mode}&q=${encodeURIComponent(term)}`;
+
+    return fetch(url, {
+      signal: request.signal,
+      credentials: 'same-origin',
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+    })
+      .then((response) => (response.ok ? response.json() : Promise.reject(new Error('http'))))
+      .then((payload) => {
+        if (!payload || !payload.success) throw new Error('payload');
+        return payload.data;
+      });
+  };
 
   // combobox active-option tracking (keyboard highlight + aria-activedescendant)
   let activeIndex = -1;
@@ -490,38 +564,62 @@ if (searchPanel && searchOpenBtn) {
     }
   };
 
-  const renderResults = () => {
+  const renderResults = (data, term) => {
+    if (!data.found) {
+      showEmpty(term);
+      return;
+    }
+
     hideEmpty();
-    grid.innerHTML = Array.from({ length: RESULTS_COUNT }, (_, i) => cardHTML(i)).join('');
-    const n = grid.children.length;
-    if (count) count.textContent = `${n} ${plural(n)}`;
+    grid.innerHTML = data.html;
+    // --d drives the staggered entrance the search panel styles rely on
+    Array.from(grid.children).forEach((card, i) => card.style.setProperty('--d', i));
+    if (count) count.textContent = `${data.found} ${plural(data.found)}`;
     panel.classList.add('has-results');
+    document.dispatchEvent(new CustomEvent('minka:cards-rendered', { detail: { root: grid } }));
   };
 
   const apply = (term) => {
     input.value = term;
     closeSuggest();
-    if (MODELS.some((m) => m.toLowerCase().includes(term.toLowerCase()))) {
-      renderResults();
-    } else {
-      showEmpty(term);
-    }
+
+    if (term.trim().length < MIN_CHARS) return;
+
+    ask(term.trim(), 'results')
+      .then((data) => renderResults(data, term))
+      .catch((error) => {
+        if (error.name !== 'AbortError') showEmpty(term);
+      });
   };
+
+  let typeTimer = null;
 
   input.addEventListener('input', () => {
     hideEmpty();
-    const q = input.value.trim().toLowerCase();
-    if (!q) return closeSuggest();
-    const matches = MODELS.filter((m) => m.toLowerCase().includes(q)).slice(0, 6);
-    if (!matches.length) return closeSuggest();
-    suggest.innerHTML = matches.map((m, i) =>
-      `<div class="search__suggest-item" role="option" id="search-opt-${i}" aria-selected="false" style="--d:${i}">
-         <img src="assets/icons/search.svg" alt="" width="12" height="12">
-         <span>${m}</span>
-       </div>`).join('');
-    suggest.classList.add('is-open');
-    input.setAttribute('aria-expanded', 'true');
-    setActive(-1);
+    clearTimeout(typeTimer);
+
+    const q = input.value.trim();
+    if (q.length < MIN_CHARS) return closeSuggest();
+
+    typeTimer = setTimeout(() => {
+      ask(q, 'suggest')
+        .then((data) => {
+          const matches = data.suggestions || [];
+          if (!matches.length) return closeSuggest();
+
+          suggest.innerHTML = matches.map((m, i) =>
+            `<div class="search__suggest-item" role="option" id="search-opt-${i}" aria-selected="false" style="--d:${i}">
+               <img src="${MINKA.assets}/icons/search.svg" alt="" width="12" height="12">
+               <span>${m}</span>
+             </div>`).join('');
+          suggest.classList.add('is-open');
+          input.setAttribute('aria-expanded', 'true');
+          setActive(-1);
+        })
+        .catch((error) => {
+          if (error.name !== 'AbortError') closeSuggest();
+        });
+    }, TYPE_DELAY);
   });
 
   suggest.addEventListener('click', (e) => {
@@ -666,6 +764,10 @@ if (typeof Swiper !== 'undefined') {
         slideClass: 'popular-card',
         slidesPerView: 1,
         spaceBetween: 20,
+        // В блоке «Читайте также» карточка — это сама ссылка <a>, а Swiper
+        // вешает на слайд role="group": для ссылки такая роль недопустима.
+        // Стрелки подписаны в разметке, карточки читаются по своему тексту.
+        a11y: false,
         navigation: {
           prevEl: scope.querySelector('.popular__arrow--prev'),
           nextEl: scope.querySelector('.popular__arrow--next'),
@@ -730,6 +832,10 @@ if (typeof Swiper !== 'undefined') {
         slideClass: 'single__img',
         slidesPerView: 1,
         spaceBetween: 20,
+        // Слайды здесь — сами <img>, а Swiper вешает на слайд role="group":
+        // для изображения такая роль недопустима. Стрелки уже подписаны
+        // в разметке, а фото читаются по своему alt.
+        a11y: false,
         navigation: {
           prevEl: galleryEl.querySelector('.single__arrow--prev'),
           nextEl: galleryEl.querySelector('.single__arrow--next'),
@@ -807,27 +913,8 @@ if (catalogGrid && catalogMore) {
   });
 }
 
-// ========================================
-// Blog "show more" (reveal the capped-off cards)
-// ========================================
-const blogGrid = document.querySelector('.blog__grid');
-const blogMore = document.querySelector('.blog__more');
-
-if (blogGrid && blogMore) {
-  blogMore.addEventListener('click', () => {
-    // capped cards are display:none, so the first hidden one is the first that
-    // will appear once expanded
-    const firstHidden = Array.from(blogGrid.querySelectorAll('.blog__card'))
-      .find((card) => card.offsetParent === null);
-
-    blogGrid.classList.add('is-expanded');
-    blogMore.remove();
-
-    // move focus to it (the card is itself the <a>) so keyboard users continue
-    // from the new posts instead of losing focus when the button is removed
-    if (firstHidden) firstHidden.focus({ preventScroll: true });
-  });
-}
+// Blog "show more" lives in blog.js: it reveals the capped cards and then
+// appends the next page over AJAX.
 
 // ========================================
 // Catalog filter dropdowns
@@ -1131,16 +1218,4 @@ document.querySelectorAll('.catalog__range').forEach((range) => {
   update();
 });
 
-/* Cookie consent banner — layout only for now (no persisted consent):
-   show on load, close on Принять / Отклонить. Runs only where #cookie exists. */
-(function () {
-  const cookie = document.getElementById('cookie');
-  if (!cookie) return;
-
-  // reveal a moment after load so it eases in gently, not on first paint
-  setTimeout(() => cookie.classList.add('is-open'), 1000);
-
-  cookie.querySelectorAll('[data-cookie-close]').forEach((btn) => {
-    btn.addEventListener('click', () => cookie.classList.remove('is-open'));
-  });
-})();
+/* Cookie consent banner живёт в consent.js: вид из вёрстки, согласие — Complianz. */

@@ -1,5 +1,422 @@
 /*
-Theme Name: Custom Theme
+Theme Name: MINKA
+Description: Тема интернет-магазина норковых шуб MINKA на WooCommerce.
 Author: German
-Version: 1.0
+Version: 1.0.0
+Requires at least: 6.0
+Requires PHP: 7.4
+Text Domain: Minka
 */
+
+/* Иконка соцсети, добавленной через настройки, не должна ломать ряд в подвале. */
+.footer__social img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Каталог без результатов: в вёрстке такого состояния не было.
+   Блок занимает экран целиком за вычетом того, что над ним (крошки, заголовок
+   и строка фильтров), поэтому подсказка оказывается посередине пустого экрана.
+   Высоту шапки каталога измеряет catalog-filters.js и кладёт в
+   --minka-catalog-head: она разная на разных экранах и меняется, когда строка
+   фильтров переносится. Значение ниже — запасное, если скрипт не отработал. */
+.catalog__empty {
+    --minka-catalog-head: 260px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - var(--minka-catalog-head));
+    /* svh — высота окна без скрывающихся панелей браузера на мобильных */
+    min-height: calc(100svh - var(--minka-catalog-head));
+    padding: 40px 0;
+    box-sizing: border-box;
+}
+
+/* сам текст остаётся обычным абзацем: внутри ссылка, и во flex-контейнере
+   она стала бы отдельным элементом, разорвав предложение */
+.catalog__empty-text {
+    margin: 0;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 300;
+}
+
+.catalog__empty a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   Избранное
+   ========================================================================== */
+
+/* Список хранится в браузере, поэтому список и пустое состояние лежат в
+   разметке рядом, а скрипт показывает нужное. У .favorites-empty в вёрстке
+   display: flex, который сам по себе перебивает атрибут hidden. */
+.favorites-empty[hidden],
+.favorites[hidden] {
+    display: none;
+}
+
+/* favorites-empty.css растягивает секцию на весь экран под центрированную
+   заглушку — со списком карточек это лишняя пустота. */
+.page-favorites .catalog {
+    height: auto;
+}
+
+.page-favorites.favorites-is-empty .catalog {
+    height: var(--fixed-vh, 100vh);
+}
+
+/* В вёрстке карточек ровно четыре и ряд собран флексом; при меньшем числе они
+   растягивались на всю ширину. Сетка держит карточку в её размере. */
+.favorites .popular__list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 10px;
+    row-gap: 20px;
+}
+
+/* Появление карточек лесенкой — как ряды каталога при «Показать ещё». */
+@keyframes minka-favorite-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+.favorites .popular-card.is-entering {
+    animation: minka-favorite-in 0.45s ease backwards;
+    animation-delay: calc(var(--d, 0) * 0.06s);
+}
+
+/* Снятое сердце: карточка гаснет, соседние переезжают на её место (сдвиг
+   задаётся из скрипта, здесь только исходное затухание). */
+.favorites .popular-card.is-leaving {
+    opacity: 0;
+    transform: scale(0.96);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+/* Смена состояний: список и заглушка сменяют друг друга затуханием. */
+.favorites,
+.favorites-empty {
+    transition: opacity 0.3s ease;
+}
+
+.favorites.is-fading,
+.favorites-empty.is-fading {
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .favorites .popular-card.is-entering,
+    .favorites .popular-card.is-leaving,
+    .favorites,
+    .favorites-empty {
+        animation: none;
+        transition: none;
+    }
+}
+
+@media (max-width: 1025px) {
+    .favorites .popular__list {
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 12px;
+        row-gap: 24px;
+    }
+}
+
+/* Пока сетка каталога обновляется, она гаснет и не принимает клики. */
+.catalog__results {
+    transition: opacity 0.25s ease;
+}
+
+.catalog__results--loading {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.catalog__more.catalog__results--loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+@media (max-width: 1919px) {
+    .catalog__empty-text {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 570px) {
+    .catalog__empty-text {
+        font-size: 14px;
+        max-width: 375px;
+    }
+}
+
+
+/* Хвост каталога (1–4 карточки без крупной): обычный ряд по четыре,
+   иначе квадрат занимает всю ширину и карточки раздуваются. */
+@media (min-width: 1026px) {
+    .catalog__row--rest .catalog__quad {
+        flex: 1 1 100%;
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Второе фото товара (показывается при наведении) может быть других пропорций,
+   чем первое, и тогда оно не закрывало его целиком — снизу оставалась полоса.
+   Кладём обе картинки в одну ячейку сетки: верхняя занимает ровно бокс нижней.
+   Ниже 1026px фото при наведении скрыто вёрсткой, поэтому там ничего не меняем. */
+@media (min-width: 1026px) {
+    .popular-card__link {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .popular-card__img,
+    .popular-card__img--hover {
+        grid-area: 1 / 1;
+        margin-bottom: 0;
+    }
+
+    .popular-card__img--hover {
+        position: static;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* отступ картинки до заголовка переехал с margin-bottom на заголовок */
+    .popular-card__link > .popular-card__title {
+        margin-top: 10px;
+    }
+
+    /* крупная карточка каталога: тот же стек, но картинки тянутся на всю
+       свободную высоту (в catalog.css ссылка была flex-колонкой) */
+    .catalog__feature .popular-card__link {
+        display: grid;
+        grid-template-rows: 1fr auto auto;
+    }
+
+    .catalog__feature .popular-card__img,
+    .catalog__feature .popular-card__img--hover {
+        height: 100%;
+        min-height: 0;
+    }
+}
+
+@media (min-width: 1026px) and (max-width: 1919px) {
+    .popular-card__link > .popular-card__title {
+        margin-top: 8px;
+    }
+}
+
+/* ==========================================================================
+   Статья блога
+   ========================================================================== */
+
+/* Угол таблицы в вёрстке пустой и без отступов. Когда у первой колонки есть
+   заголовок, ячейке нужны те же поля, что и остальным. */
+th.post__table-corner {
+    padding: 18px;
+}
+
+/* Редактор WordPress отдаёт обычные <figure> и <table>, а вёрстка рассчитана
+   на .post__figure и .post__table-wrap — переносим те же правила на них. */
+.post figure {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 0 30px;
+}
+
+.post figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.post figcaption {
+    text-align: center;
+    font-weight: 300;
+    font-size: 18px;
+    color: #000;
+}
+
+.post figure.wp-block-table {
+    display: block;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.post table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+/* Ширину раздаёт содержимое, а не поровну всем колонкам.
+   В вёрстке таблица была на четыре одинаковых колонки, и ей хватало
+   table-layout: fixed с min-width: 640px. У статей колонок бывает две —
+   тогда каждая получала половину таблицы: на мобильном по 320px вместо
+   заявленных 175, а на десктопе короткая подпись вроде «Тепло» болталась
+   одна в половине экрана. Auto-раскладка сжимает колонку по содержимому,
+   min-width держит нижнюю границу, а .post__table-wrap прокручивает
+   таблицу, если содержимое всё-таки шире экрана. */
+.post__table,
+.post table {
+    table-layout: auto;
+    min-width: 0;
+}
+
+.post__table th,
+.post__table td,
+.post table th,
+.post table td {
+    min-width: 175px;
+}
+
+/* Переключатель в блоке таблицы: первая колонка по центру, как остальные
+   (в вёрстке она всегда прижата к левому краю). */
+.post__table--first-center th:first-child,
+.post__table--first-center td:first-child {
+    text-align: center;
+}
+
+/* Пункты списка стоят вплотную друг к другу: у .post__text расстояние между
+   абзацами задано gap'ом контейнера, а на элементы внутри списка он не
+   распространяется. Ставим между пунктами тот же отступ, что и между
+   абзацами, — по всем брейкпойнтам (35 / 26 / 15px). */
+.post li + li {
+    margin-top: 35px;
+}
+
+@media (max-width: 1919px) {
+    .post li + li {
+        margin-top: 26px;
+    }
+}
+
+@media (max-width: 570px) {
+    .post li + li {
+        margin-top: 15px;
+    }
+}
+
+/* В вёрстке обложка карточки — 607×480, и высота карточки задавалась самой
+   картинкой. Загружать будут снимки любых пропорций, поэтому высоту держим коробкой
+   с тем же соотношением: карточки в ряду остаются одной высоты, а изображение
+   заполняет её без искажений. Сам файл в медиатеке не режется. */
+.blog__img-wrap {
+    aspect-ratio: 607 / 480;
+}
+
+.blog__img-wrap .blog__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* То же для карточек статей в блоке «Читайте также». Соотношение берём по
+   обложке из вёрстки (607×480): в атрибутах разметки там остались размеры от
+   карточки товара, но картинка выводилась с height:auto, то есть горизонтальной. */
+.popular-card__media {
+    aspect-ratio: 607 / 480;
+}
+
+.popular-card__media .popular-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Догруженные карточки появляются той же анимацией, что и раскрытые. */
+.blog__more--loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Пустой блог: состояния в вёрстке не было. */
+.blog__empty {
+    margin: 60px 0 80px;
+    text-align: center;
+    font-weight: 300;
+    font-size: 19px;
+}
+/* Старая цена в карточке товара: берётся из обычной цены WooCommerce,
+   когда у товара задана цена со скидкой. */
+.popular-card__price {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.popular-card__price-old {
+    font-weight: 300;
+    font-size: 16px;
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+/* Старая цена на карточке товара — своим классом, размер задаётся отдельно
+   от цены в каталоге. */
+.single__price {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+}
+
+.single__price-old {
+    font-weight: 300;
+    font-size: 20px;
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+
+@media (max-width: 1919px) {
+    .popular-card__price-old {
+        font-size: 13px;
+    }
+
+    .popular-card__price {
+        gap: 8px;
+    }
+
+    .single__price-old {
+        font-size: 15px;
+    }
+
+    .single__price {
+        gap: 12px;
+    }
+}
+
+/* «Показать ещё» в блоге: на узких экранах вёрстка показывает шесть карточек,
+   а нужно пять — сдвигаем кап на одну и оставляем ту же анимацию раскрытия. */
+@media (max-width: 570px) {
+    .blog__card:nth-child(n+6) {
+        display: none;
+    }
+
+    .blog__grid.is-expanded .blog__card:nth-child(n+6) {
+        display: block;
+        animation: blog-reveal 0.5s ease both;
+    }
+
+    .popular-card__price-old {
+        font-size: 12px;
+    }
+
+    .single__price-old {
+        font-size: 12px;
+    }
+
+    .single__price {
+        gap: 8px;
+    }
+}

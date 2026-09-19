@@ -22,9 +22,40 @@ services:
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
+      # Интеграция с EspoCRM и Meta (значения в .env, в git не попадают)
+      MINKA_ESPO_API_URL: ${MINKA_ESPO_API_URL:-}
+      MINKA_ESPO_API_KEY: ${MINKA_ESPO_API_KEY:-}
+      MINKA_ESPO_WEBHOOK_SECRETS: ${MINKA_ESPO_WEBHOOK_SECRETS:-}
+      MINKA_META_PIXEL_ID: ${MINKA_META_PIXEL_ID:-}
+      MINKA_META_CAPI_TOKEN: ${MINKA_META_CAPI_TOKEN:-}
+      MINKA_META_TEST_EVENT_CODE: ${MINKA_META_TEST_EVENT_CODE:-}
+      MINKA_META_GRAPH_VERSION: ${MINKA_META_GRAPH_VERSION:-}
+      MINKA_CAPI_REQUIRE_MARKETING_CONSENT: ${MINKA_CAPI_REQUIRE_MARKETING_CONSENT:-1}
+      MINKA_ESPO_UI_URL: ${MINKA_ESPO_UI_URL:-}
+      MINKA_TG_BOT_TOKEN: ${MINKA_TG_BOT_TOKEN:-}
+      MINKA_TG_CHAT_ID: ${MINKA_TG_CHAT_ID:-}
+      MINKA_TG_THREAD_ID: ${MINKA_TG_THREAD_ID:-}
     volumes:
       - ./theme:/var/www/html/wp-content/themes/custom-theme
+      - ./mu-plugins:/var/www/html/wp-content/mu-plugins
       - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+
+  # WP-CLI для разовых операций: перенос домена, миграции.
+  # Профиль cli исключает его из обычного docker compose up.
+  wpcli:
+    image: wordpress:cli
+    profiles: ["cli"]
+    depends_on:
+      - db
+      - wordpress
+    volumes_from:
+      - wordpress
+    user: "33:33"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
 
 volumes:
   db_data:
