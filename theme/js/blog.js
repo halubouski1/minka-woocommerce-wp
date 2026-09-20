@@ -24,13 +24,22 @@
 
   button.dataset.next = button.getAttribute('href') === '#' ? '' : button.getAttribute('href');
 
+  // Переводим фокус на первую новую карточку только когда кнопку нажали
+  // с клавиатуры: иначе на телефоне вокруг карточки рисуется обводка,
+  // хотя пальцем по ней никто не «фокусировался».
+  let keyboardActivated = false;
+
+  const focusFirstNew = (card) => {
+    if (card && keyboardActivated) card.focus({ preventScroll: true });
+  };
+
   const reveal = () => {
     const first = hiddenCards()[0];
 
     grid.classList.add('is-expanded');
 
     // the card is itself the <a>, so keyboard focus continues from the new posts
-    if (first) first.focus({ preventScroll: true });
+    focusFirstNew(first);
   };
 
   const append = () => {
@@ -69,7 +78,7 @@
         // Адрес не трогаем: догрузка — это продолжение той же страницы,
         // а не переход на вторую.
 
-        if (first) first.focus({ preventScroll: true });
+        focusFirstNew(first);
       })
       .catch(() => {
         // сеть подвела — уходим на обычную страницу пагинации
@@ -79,6 +88,9 @@
 
   button.addEventListener('click', (e) => {
     e.preventDefault();
+
+    // У клика с клавиатуры (Enter или пробел) detail === 0, у пальца и мыши — нет.
+    keyboardActivated = e.detail === 0;
 
     if (button.classList.contains(LOADING)) return;
 

@@ -192,7 +192,6 @@ $minka_popup_image = minka_popup_image();
 		<p class="cookie__desc">Эти файлы необходимы для корректной работы сайта. Без них сайт не будет функционировать должным образом. Они не собирают личные данные.</p>
 		<div class="cookie__actions">
 			<button class="hero__catalog buy__catalog cookie__accept" type="button" data-cookie-close>Принять</button>
-			<button class="hero__availability popular__link cookie__decline" type="button" data-cookie-close>Отклонить</button>
 		</div>
 	</div>
 </div>

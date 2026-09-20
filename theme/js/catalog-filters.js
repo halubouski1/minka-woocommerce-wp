@@ -164,6 +164,11 @@
       .then((data) => {
         swapGrid(data.html);
         window.history.pushState({ minkaCatalog: true }, '', url);
+        // Подпись кнопки сортировки и состояние фильтров живут вне сетки,
+        // поэтому подмена разметки их не трогает — обновляем отдельно.
+        // Без этого выбрать «Сначала дешевле» получалось, а на кнопке
+        // продолжало висеть «По популярности».
+        syncControls(url);
         if (typeof AOS !== 'undefined' && AOS.refreshHard) AOS.refreshHard();
       })
       .catch((error) => {

@@ -256,6 +256,29 @@ function minka_add_faq_schema( $graph ) {
 		return $graph;
 	}
 
+	// Ищем узел страницы заранее: его @id — это канонический адрес, от него
+	// и строим якоря вопросов. Раньше здесь стоял адрес главной, и вопросы
+	// каталога, ухода и карточек товара получали чужие идентификаторы —
+	// одинаковые на всех страницах сразу.
+	$page_index = null;
+
+	foreach ( $graph as $index => $node ) {
+		if ( empty( $node['@type'] ) ) {
+			continue;
+		}
+
+		$types = (array) $node['@type'];
+
+		if ( array_intersect( $types, array( 'WebPage', 'CollectionPage', 'ItemPage' ) ) ) {
+			$page_index = $index;
+			break;
+		}
+	}
+
+	$base = null !== $page_index && ! empty( $graph[ $page_index ]['@id'] )
+		? $graph[ $page_index ]['@id']
+		: home_url( '/' );
+
 	$questions = array();
 	$refs      = array();
 
@@ -264,7 +287,7 @@ function minka_add_faq_schema( $graph ) {
 			continue;
 		}
 
-		$id = home_url( '/#faq-question-' . ( $index + 1 ) );
+		$id = $base . '#faq-question-' . ( $index + 1 );
 
 		$questions[] = array(
 			'@type'          => 'Question',
@@ -283,25 +306,13 @@ function minka_add_faq_schema( $graph ) {
 		return $graph;
 	}
 
-	foreach ( $graph as &$node ) {
-		if ( ! isset( $node['@type'] ) ) {
-			continue;
-		}
+	if ( null !== $page_index ) {
+		$types   = (array) $graph[ $page_index ]['@type'];
+		$types[] = 'FAQPage';
 
-		$types = (array) $node['@type'];
-
-		if ( ! in_array( 'WebPage', $types, true ) && ! in_array( 'CollectionPage', $types, true ) && ! in_array( 'ItemPage', $types, true ) ) {
-			continue;
-		}
-
-		$types[]          = 'FAQPage';
-		$node['@type']    = array_values( array_unique( $types ) );
-		$node['mainEntity'] = $refs;
-
-		break;
+		$graph[ $page_index ]['@type']      = array_values( array_unique( $types ) );
+		$graph[ $page_index ]['mainEntity'] = $refs;
 	}
-
-	unset( $node );
 
 	return array_merge( $graph, $questions );
 }

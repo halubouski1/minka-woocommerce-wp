@@ -420,3 +420,11 @@ th.post__table-corner {
         gap: 8px;
     }
 }
+
+/* Подстраховка к правке в blog.js: обводка вокруг карточки нужна только
+   тому, кто ходит клавиатурой. При касании и клике мышью браузер иногда
+   всё равно рисует её после программного переноса фокуса. */
+.blog__card:focus:not(:focus-visible),
+.popular-card:focus:not(:focus-visible) {
+    outline: none;
+}

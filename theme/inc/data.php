@@ -49,6 +49,34 @@ function minka_image( $value, $fallback_path = '', $width = 0, $height = 0 ) {
 }
 
 /**
+ * Приводит свои ссылки к текущей настройке слэша на конце.
+ *
+ * В полях ACF адреса сохранены такими, какими их выбрали в админке, —
+ * со слэшем. После смены структуры постоянных ссылок каждая такая ссылка
+ * стала вести на редирект; чужие адреса не трогаем.
+ */
+function minka_normalize_url( $url ) {
+	$url = (string) $url;
+
+	if ( '' === $url || 0 !== strpos( $url, home_url() ) ) {
+		return $url;
+	}
+
+	$path = wp_parse_url( $url, PHP_URL_PATH );
+
+	if ( ! $path || '/' === $path ) {
+		return $url;
+	}
+
+	$query    = wp_parse_url( $url, PHP_URL_QUERY );
+	$fragment = wp_parse_url( $url, PHP_URL_FRAGMENT );
+
+	return home_url( user_trailingslashit( $path ) )
+		. ( $query ? '?' . $query : '' )
+		. ( $fragment ? '#' . $fragment : '' );
+}
+
+/**
  * Приводит значение ACF-поля «Ссылка» к массиву title/url/target.
  */
 function minka_link( $value ) {
@@ -58,7 +86,7 @@ function minka_link( $value ) {
 
 	return array(
 		'title'  => isset( $value['title'] ) ? $value['title'] : '',
-		'url'    => $value['url'],
+		'url'    => minka_normalize_url( $value['url'] ),
 		'target' => ! empty( $value['target'] ) ? $value['target'] : '',
 	);
 }

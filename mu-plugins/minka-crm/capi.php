@@ -88,12 +88,25 @@ function minka_crm_capi_user_data( $record, $consent ) {
 		$data['em'] = array( minka_crm_hash( $email ) );
 	}
 
-	if ( ! empty( $record['firstName'] ) ) {
-		$data['fn'] = array( minka_crm_hash( $record['firstName'] ) );
+	// В форме поле имени одно и свободное. Для EspoCRM одно слово кладётся
+	// в lastName — там от него зависит отображаемое имя лида. Но Meta
+	// сопоставляет имя и фамилию по отдельности, и имя, отправленное как
+	// фамилия, не совпадёт ни с чем. Поэтому для Meta одно слово уходит
+	// именем: люди в поле «Имя» пишут имя, а не фамилию.
+	$first = isset( $record['firstName'] ) ? trim( (string) $record['firstName'] ) : '';
+	$last  = isset( $record['lastName'] ) ? trim( (string) $record['lastName'] ) : '';
+
+	if ( '' === $first && '' !== $last && false === strpos( $last, ' ' ) ) {
+		$first = $last;
+		$last  = '';
 	}
 
-	if ( ! empty( $record['lastName'] ) ) {
-		$data['ln'] = array( minka_crm_hash( $record['lastName'] ) );
+	if ( '' !== $first ) {
+		$data['fn'] = array( minka_crm_hash( $first ) );
+	}
+
+	if ( '' !== $last ) {
+		$data['ln'] = array( minka_crm_hash( $last ) );
 	}
 
 	// external_id должен быть одинаковым во всех событиях одного человека,

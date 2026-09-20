@@ -70,7 +70,14 @@ function minka_page_url( $key ) {
 
 	$slug = isset( $slugs[ $key ] ) ? $slugs[ $key ] : $key;
 
-	return home_url( '/' . ( $slug ? $slug . '/' : '' ) );
+	if ( ! $slug ) {
+		return home_url( '/' );
+	}
+
+	// Слэш на конце ставим не жёстко, а по настройке постоянных ссылок:
+	// иначе при структуре без слэша каждая ссылка в меню и подвале вела бы
+	// на редирект, а это лишний переход для посетителя и для робота.
+	return home_url( user_trailingslashit( '/' . $slug ) );
 }
 
 /**
