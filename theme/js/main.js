@@ -231,6 +231,43 @@ if (menu && menuOpenBtn) {
     popup.querySelector('.popup__thanks')?.focus({ preventScroll: true });
   };
 
+  // Имена форм для аналитики. Намёк о подарке в список не входит: это
+  // письмо близкому человеку, а не обращение в магазин — считать его заявкой
+  // значит завышать конверсию и учить рекламу не на тех людях.
+  const LEAD_FORMS = {
+    contacts: 'contact_form',
+    cta: 'product_form',
+  };
+
+  // Одна отправка формы — одно событие, иначе в отчётах будет двойной счёт.
+  // Запись на примерку получает своё имя: это не обычная заявка, а визит
+  // в шоурум, и в воронке у неё другое место. Модель берётся из данных
+  // страницы — на карточке товара они есть, на контактах их нет.
+  //
+  // Событие уходит только после ответа сервера, что заявка принята. Нажатие
+  // кнопки событием не считается: половина таких нажатий заканчивается
+  // ошибкой валидации или обрывом сети.
+  const trackSubmission = (key) => {
+    if (typeof window.minkaGaEvent !== 'function') return;
+
+    if (key === 'showroom') {
+      const item = window.minkaEcommerce && window.minkaEcommerce.item;
+      const params = {};
+
+      if (item && item.item_id) {
+        params.item_id = item.item_id;
+        params.item_name = item.item_name;
+      }
+
+      window.minkaGaEvent('book_fitting', params);
+      return;
+    }
+
+    const formName = LEAD_FORMS[key];
+
+    if (formName) window.minkaGaEvent('generate_lead', { form_name: formName });
+  };
+
   // The form and its validation stay as designed; a valid submission is handed
   // to WordPress, which files it in Gravity Forms (entry + notifications).
   const submitForm = (form) => {
@@ -258,6 +295,7 @@ if (menu && menuOpenBtn) {
         if (!payload || !payload.success) throw new Error('payload');
 
         if (button) button.disabled = false;
+        trackSubmission(key);
         showThanks(form);
         form.reset();
       })
@@ -1219,3 +1257,190 @@ document.querySelectorAll('.catalog__range').forEach((range) => {
 });
 
 /* Cookie consent banner живёт в consent.js: вид из вёрстки, согласие — Complianz. */
+
+// ========================================
+// Электронная торговля GA4: просмотр товара, показ списка, выбор из списка
+// ========================================
+(() => {
+  // gtag появляется только после согласия на статистику. Событие, случившееся
+  // раньше, не выбрасываем: откладываем до момента, когда Complianz зажжёт
+  // категории, — иначе просмотры товара терялись бы у всех, кто соглашается
+  // не мгновенно.
+  const pending = [];
+
+  const send = (name, params) => {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', name, params);
+      return true;
+    }
+    return false;
+  };
+
+  window.minkaGaEvent = (name, params) => {
+    if (!send(name, params)) pending.push([name, params]);
+  };
+
+  document.addEventListener('cmplz_fire_categories', () => {
+    // счётчик подключается тем же событием — даём ему отработать первым
+    setTimeout(() => {
+      while (pending.length) {
+        const [name, params] = pending.shift();
+        send(name, params);
+      }
+    }, 300);
+  });
+
+  const itemOf = (card) => {
+    if (!card || !card.dataset.itemId) return null;
+
+    const item = {
+      item_id: card.dataset.itemId,
+      item_name: card.dataset.itemName || '',
+      item_category: card.dataset.itemCategory || '',
+    };
+
+    const price = parseFloat(card.dataset.price);
+    if (!Number.isNaN(price)) item.price = price;
+
+    return item;
+  };
+
+  // Откуда карточка: идентификатор списка стабильный, название берём из
+  // заголовка блока — он и так описывает подборку словами человека.
+  const listOf = (card) => {
+    const containers = [
+      ['.catalog__grid', 'catalog', 'Каталог норковых шуб'],
+      ['.search__grid', 'search', 'Результаты поиска'],
+      ['.favorites', 'favorites', 'Избранное'],
+      ['.popular__list', 'popular', 'Популярные модели'],
+    ];
+
+    for (const [selector, id, fallback] of containers) {
+      const scope = card.closest(selector);
+      if (!scope) continue;
+
+      const heading = scope.closest('section')?.querySelector('.section-title');
+
+      return {
+        item_list_id: id,
+        item_list_name: heading ? heading.textContent.trim() : fallback,
+      };
+    }
+
+    return { item_list_id: 'other', item_list_name: 'Другие модели' };
+  };
+
+  // ---- view_item: карточка товара ----
+  const single = window.minkaEcommerce;
+
+  if (single && single.item && single.item.item_id) {
+    const item = Object.assign({}, single.item);
+    const value = item.price;
+    delete item.price;
+
+    window.minkaGaEvent('view_item', {
+      currency: single.currency,
+      value: value,
+      items: [Object.assign({ price: value }, item)],
+    });
+  }
+
+  // ---- view_item_list: списки, которые есть на странице сразу ----
+  const trackedLists = new Set();
+
+  const trackList = (scope) => {
+    const cards = Array.from(scope.querySelectorAll('.popular-card[data-item-id]'));
+    if (!cards.length) return;
+
+    const list = listOf(cards[0]);
+    if (trackedLists.has(list.item_list_id)) return;
+    trackedLists.add(list.item_list_id);
+
+    window.minkaGaEvent('view_item_list', Object.assign({}, list, {
+      items: cards.map((card, index) => Object.assign({ index: index }, itemOf(card), list)),
+    }));
+  };
+
+  document.querySelectorAll('.catalog__grid, .search__grid, .favorites, .popular__list')
+    .forEach(trackList);
+
+  // Догруженные карточки (каталог, поиск) — тот же список, повторно не шлём.
+  document.addEventListener('minka:cards-rendered', (e) => {
+    const root = e.detail && e.detail.root;
+    if (root) trackList(root);
+  });
+
+  // ---- add_to_wishlist: сердечко на карточке и на странице товара ----
+  // Событие только на добавление: снятие сердечка — это не конверсия,
+  // а отказ от неё, и считать его тем же событием нельзя.
+  document.addEventListener('click', (e) => {
+    const fav = e.target.closest('.popular-card__fav, .single__fav');
+    if (!fav) return;
+
+    // обработчик выше уже переключил класс — читаем итоговое состояние
+    if (!fav.classList.contains('is-active')) return;
+
+    const item = fav.classList.contains('single__fav')
+      ? (window.minkaEcommerce && window.minkaEcommerce.item)
+      : itemOf(fav.closest('.popular-card'));
+
+    if (!item || !item.item_id) return;
+
+    const params = { items: [item] };
+
+    if (typeof item.price === 'number') {
+      params.currency = window.minkaEcommerce && window.minkaEcommerce.currency;
+      params.value = item.price;
+    }
+
+    window.minkaGaEvent('add_to_wishlist', params);
+  });
+
+  // ---- select_item: клик по карточке в списке ----
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('.popular-card__link');
+    if (!link) return;
+
+    const card = link.closest('.popular-card');
+    const item = itemOf(card);
+    if (!item) return;
+
+    const list = listOf(card);
+
+    window.minkaGaEvent('select_item', Object.assign({}, list, {
+      items: [Object.assign({}, item, list)],
+    }));
+  });
+})();
+
+// ========================================
+// Клики по контактам: телефон, мессенджеры, соцсети
+// ========================================
+(() => {
+  // Канал определяем по самой ссылке, а не по классу: так событие работает
+  // и в шапке, и в подвале, и на контактах, и в любом новом блоке — менять
+  // код при добавлении кнопки не придётся.
+  const CHANNELS = [
+    [/^tel:/i, 'phone_click'],
+    [/(wa\.me|whatsapp\.com)/i, 'whatsapp_click'],
+    [/(t\.me|telegram\.(me|org))/i, 'telegram_click'],
+    [/instagram\.com/i, 'instagram_click'],
+  ];
+
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href]');
+    if (!link || typeof window.minkaGaEvent !== 'function') return;
+
+    const href = link.getAttribute('href') || '';
+    const channel = CHANNELS.find(([pattern]) => pattern.test(href));
+    if (!channel) return;
+
+    // Подпись берём из текста ссылки, а у иконок его нет — тогда из aria-label.
+    const label = link.textContent.trim() || link.getAttribute('aria-label') || '';
+
+    window.minkaGaEvent(channel[1], {
+      link_url: href,
+      link_text: label.slice(0, 100),
+    });
+  });
+})();

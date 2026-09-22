@@ -28,6 +28,10 @@ if ( $minka_product instanceof WC_Product ) {
 	$minka_hover   = $minka_hover ? $minka_hover[0] : '';
 	$minka_id      = $minka_product->get_id();
 
+	// Данные для событий электронной торговли GA4: их читает main.js при клике
+	// по карточке и при показе списка.
+	$minka_item = function_exists( 'minka_ecommerce_item' ) ? minka_ecommerce_item( $minka_product ) : array();
+
 	// Описания фотографий: своё из медиатеки, иначе — по названию модели.
 	$minka_main_alt  = minka_attachment_alt( $minka_product->get_image_id(), $minka_title );
 	$minka_hover_alt = $minka_gallery
@@ -44,13 +48,19 @@ if ( $minka_product instanceof WC_Product ) {
 
 	$minka_main_alt  = $minka_title;
 	$minka_hover_alt = sprintf( '%s — фото 2', $minka_title );
+	$minka_item      = array();
 }
 ?>
-<div class="popular-card"<?php echo $minka_id ? ' data-product-id="' . esc_attr( $minka_id ) . '"' : ''; ?>>
+<div class="popular-card"<?php echo $minka_id ? ' data-product-id="' . esc_attr( $minka_id ) . '"' : ''; ?><?php
+	foreach ( $minka_item as $minka_key => $minka_value ) {
+		printf( ' data-%s="%s"', esc_attr( str_replace( '_', '-', $minka_key ) ), esc_attr( $minka_value ) );
+	}
+?>>
 	<button class="popular-card__fav" type="button" aria-label="В избранное">
 		<img src="<?php echo esc_url( minka_asset( 'assets/icons/favorite.svg' ) ); ?>" alt="" width="24" height="24">
 	</button>
 	<a class="popular-card__link" href="<?php echo esc_url( $minka_link ); ?>">
+		<span class="popular-card__figure">
 		<img class="popular-card__img" src="<?php echo esc_url( $minka_main ); ?>" alt="<?php echo esc_attr( $minka_main_alt ); ?>" width="452" height="535" loading="lazy">
 		<?php if ( $minka_hover ) : ?>
 			<?php
@@ -60,6 +70,7 @@ if ( $minka_product instanceof WC_Product ) {
 			?>
 			<img class="popular-card__img popular-card__img--hover" src="<?php echo esc_url( $minka_hover ); ?>" alt="<?php echo esc_attr( $minka_hover_alt ); ?>" width="452" height="535" aria-hidden="true" loading="lazy">
 		<?php endif; ?>
+		</span>
 		<p class="popular-card__title"><?php echo esc_html( $minka_title ); ?></p>
 		<p class="popular-card__price">
 			<?php echo wp_kses_post( $minka_price ); ?>

@@ -92,3 +92,60 @@ function minka_analytics_tags() {
 	}
 }
 add_action( 'wp_head', 'minka_analytics_tags', 3 );
+
+/**
+ * Товар в формате электронной торговли GA4.
+ *
+ * item_id — артикул: тот же идентификатор уходит в Meta (content_ids) и
+ * подойдёт для товарного фида, поэтому отчёты сойдутся между системами.
+ * Категория WooCommerce у всех моделей пока служебная («Misc»), она читателю
+ * отчёта ничего не скажет — подставляем осмысленную.
+ */
+function minka_ecommerce_item( $product ) {
+	if ( ! $product instanceof WC_Product ) {
+		return array();
+	}
+
+	$category = '';
+
+	foreach ( wp_get_post_terms( $product->get_id(), 'product_cat', array( 'fields' => 'names' ) ) as $name ) {
+		if ( 'Misc' !== $name && 'Без категории' !== $name ) {
+			$category = $name;
+			break;
+		}
+	}
+
+	return array(
+		'item_id'       => $product->get_sku() ? $product->get_sku() : (string) $product->get_id(),
+		'item_name'     => $product->get_name(),
+		'item_category' => $category ? $category : 'Норковые шубы',
+		'price'         => (float) $product->get_price(),
+	);
+}
+
+/**
+ * Данные карточки товара для события view_item.
+ *
+ * Отдаются в JS отдельным объектом: собирать их в разметке карточки незачем,
+ * товар на странице один.
+ */
+function minka_ecommerce_data() {
+	if ( ! function_exists( 'get_woocommerce_currency' ) ) {
+		return;
+	}
+
+	$data = array( 'currency' => get_woocommerce_currency() );
+
+	// Товар — только на его собственной странице. Валюта нужна везде:
+	// в избранное добавляют и из каталога, и из слайдеров.
+	if ( function_exists( 'is_product' ) && is_product() ) {
+		$product = wc_get_product( get_queried_object_id() );
+
+		if ( $product ) {
+			$data['item'] = minka_ecommerce_item( $product );
+		}
+	}
+
+	wp_localize_script( 'minka-main', 'minkaEcommerce', $data );
+}
+add_action( 'wp_enqueue_scripts', 'minka_ecommerce_data', 20 );

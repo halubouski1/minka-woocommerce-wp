@@ -168,50 +168,69 @@ Text Domain: Minka
     }
 }
 
-/* Второе фото товара (показывается при наведении) может быть других пропорций,
-   чем первое, и тогда оно не закрывало его целиком — снизу оставалась полоса.
-   Кладём обе картинки в одну ячейку сетки: верхняя занимает ровно бокс нижней.
-   Ниже 1026px фото при наведении скрыто вёрсткой, поэтому там ничего не меняем. */
+/* Фотографии карточки лежат в общей обёртке .popular-card__figure.
+   Раньше их клали в одну ячейку грида, но у крупной карточки каталога это
+   ломалось в Safari: там height: 100% у картинки считается от высоты всей
+   карточки, а не от своей строки, и фото наезжало на название и цену.
+   Обёртка — обычный блок, у него проценты и flex работают предсказуемо. */
+.popular-card__figure {
+    display: block;
+    position: relative;
+}
+
+/* Фото при наведении ложится ровно на первое, какими бы ни были пропорции
+   исходников. Ниже 1026px вёрстка его прячет, поэтому правило безвредно. */
+.popular-card__figure .popular-card__img--hover {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Ниже 1026px карточка — сетка с областями img / title / price / fav, а ссылка
+   растворяется через display: contents. Обёртка растворяется вместе с ней,
+   иначе картинка перестаёт быть элементом этой сетки. Отступ под фото при
+   этом остаётся на самой картинке, как в вёрстке. */
+@media (max-width: 1025px) {
+    .popular-card__figure {
+        display: contents;
+    }
+}
+
+/* На широких экранах отступ под фото переезжает с картинки на обёртку:
+   у крупной карточки картинка позиционирована абсолютно и свой отступ
+   потеряла бы. Значения те же, что в вёрстке: 10px, с 1919px — 8px. */
 @media (min-width: 1026px) {
-    .popular-card__link {
-        display: grid;
-        grid-template-columns: 1fr;
+    .popular-card__figure {
+        margin-bottom: 10px;
     }
 
-    .popular-card__img,
-    .popular-card__img--hover {
-        grid-area: 1 / 1;
+    .popular-card__figure .popular-card__img {
         margin-bottom: 0;
     }
 
-    .popular-card__img--hover {
-        position: static;
+    /* Крупная карточка каталога: обёртка занимает всю свободную высоту, обе
+       фотографии заполняют её кадрированием. min-height: 0 разрешает
+       flex-элементу сжиматься ниже содержимого, overflow прячет лишнее. */
+    .catalog__feature .popular-card__figure {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .catalog__feature .popular-card__figure .popular-card__img {
+        position: absolute;
+        inset: 0;
         width: 100%;
         height: 100%;
-    }
-
-    /* отступ картинки до заголовка переехал с margin-bottom на заголовок */
-    .popular-card__link > .popular-card__title {
-        margin-top: 10px;
-    }
-
-    /* крупная карточка каталога: тот же стек, но картинки тянутся на всю
-       свободную высоту (в catalog.css ссылка была flex-колонкой) */
-    .catalog__feature .popular-card__link {
-        display: grid;
-        grid-template-rows: 1fr auto auto;
-    }
-
-    .catalog__feature .popular-card__img,
-    .catalog__feature .popular-card__img--hover {
-        height: 100%;
-        min-height: 0;
+        object-fit: cover;
     }
 }
 
 @media (min-width: 1026px) and (max-width: 1919px) {
-    .popular-card__link > .popular-card__title {
-        margin-top: 8px;
+    .popular-card__figure {
+        margin-bottom: 8px;
     }
 }
 
