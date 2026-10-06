@@ -290,26 +290,130 @@ if (menu && menuOpenBtn) {
     data.append('page', window.location.href);
 
     fetch(MINKA.ajaxUrl, { method: 'POST', credentials: 'same-origin', body: data })
-      .then((response) => (response.ok ? response.json() : Promise.reject(new Error('http'))))
-      .then((payload) => {
-        if (!payload || !payload.success) throw new Error('payload');
+      // Ответ читаем и при ошибке: сервер объясняет, что именно не так
+      // с заявкой (например, с номером телефона), и это человеку полезнее
+      // общего «не удалось отправить».
+      .then((response) => response.json().catch(() => null).then((payload) => {
+        if (response.ok && payload && payload.success) return payload;
 
+        throw new Error((payload && payload.data && payload.data.message) || '');
+      }))
+      .then(() => {
         if (button) button.disabled = false;
         trackSubmission(key);
         showThanks(form);
         form.reset();
       })
-      .catch(() => {
+      .catch((err) => {
         if (button) button.disabled = false;
 
         // Заявка не ушла — говорим об этом, а не показываем ложное «Спасибо».
         const message = document.createElement('p');
         message.className = 'popup__send-error';
         message.setAttribute('role', 'alert');
-        message.textContent = 'Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.';
+        message.textContent = (err && err.message)
+          || 'Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.';
         (button || form).before(message);
       });
   };
+
+  // --- Телефон ----------------------------------------------------------
+  // Самая частая ошибка — потерянная цифра: «+375 29 11 22 33» выглядит
+  // правдоподобно, но набрать такой номер нельзя. Поэтому длину проверяем
+  // строго, а запись принимаем любую: +375, 375, 80…, 0…, просто девять
+  // цифр, со скобками, пробелами и дефисами.
+  //
+  // Те же правила продублированы на сервере (inc/forms.php) — решающая
+  // проверка там, здесь она только чтобы человек увидел ошибку до отправки.
+  const BY_MOBILE = ['25', '29', '33', '44'];
+
+  const phoneDigits = (value) => String(value).replace(/\D+/g, '');
+
+  // Национальный номер Беларуси — ровно девять цифр. Мобильные коды известны,
+  // городские начинаются с 1 или 2 (17 Минск, 152 Гродно, 212 Витебск).
+  const isByNational = (digits) => digits.length === 9
+    && (BY_MOBILE.includes(digits.slice(0, 2)) || /^[12]/.test(digits));
+
+  // Вытаскивает национальную часть из любой местной записи: +375…, 375…,
+  // 8 0XX…, 0XX… или просто девять цифр.
+  //
+  // null — номер вообще не белорусский. Если код страны белорусский, вернётся
+  // то, что нашлось, даже неверной длины: такой номер нужно отклонить, а не
+  // пропустить как международный.
+  const byNational = (value) => {
+    const plus = String(value).trim().startsWith('+');
+    let digits = phoneDigits(value);
+    let hadCountryCode = false;
+
+    // Поле подставляет «+375 », и номер, вставленный поверх подсказки,
+    // приезжает как «375375…» или «375 8029…». Пока под кодом страны
+    // остаётся больше девяти цифр — код лишний.
+    while (digits.startsWith('375') && digits.length > 12) {
+      digits = digits.slice(3);
+      hadCountryCode = true;
+    }
+
+    if (digits.startsWith('375')) return digits.slice(3);
+    if (plus && !hadCountryCode) return null;               // +7…, +48… — не наш случай
+    if (digits.length === 11 && digits.startsWith('80')) return digits.slice(2);
+    if (digits.length === 10 && digits.startsWith('0')) return digits.slice(1);
+    if (digits.length === 9) return digits;
+
+    return hadCountryCode ? digits : null;
+  };
+
+  const looksBelarusian = (value) => byNational(value) !== null;
+
+  const isValidBy = (value) => {
+    const national = byNational(value);
+
+    return national !== null && isByNational(national);
+  };
+
+  // Не белорусский номер принимаем только с кодом страны: без него угадать
+  // страну нельзя, а в CRM и в рекламных кабинетах номер без кода бесполезен.
+  const isForeign = (value) => {
+    const digits = phoneDigits(value);
+
+    return String(value).trim().startsWith('+') && digits.length >= 8 && digits.length <= 15;
+  };
+
+  // Приводим к читаемому виду после того, как человек ушёл из поля: видно,
+  // что номер распознан, и потерянная цифра сразу бросается в глаза.
+  const prettyPhone = (value) => {
+    if (!isValidBy(value)) return String(value).trim();
+
+    const national = byNational(value);
+
+    // Группируем только мобильные: у них код всегда две цифры. У городских
+    // он бывает и двух-, и трёх-, и четырёхзначным (17 Минск, 152 Гродно,
+    // 1594 Смолевичи), и разбить «152123456» как «15 212-34-56» значило бы
+    // показать человеку номер, которого он не вводил.
+    if (!BY_MOBILE.includes(national.slice(0, 2))) return `+375 ${national}`;
+
+    return `+375 ${national.slice(0, 2)} ${national.slice(2, 5)}-${national.slice(5, 7)}-${national.slice(7)}`;
+  };
+
+  // Код страны подставляется в пустое поле, чтобы человек сразу продолжил
+  // с девяти цифр. Если он ничего не ввёл, префикс убираем — иначе поле
+  // выглядит заполненным, а проверка «обязательное поле» промолчит.
+  const TEL_FIELD = 'form[data-minka-form] input[type="tel"]';
+
+  document.addEventListener('focusin', (e) => {
+    const input = e.target.closest ? e.target.closest(TEL_FIELD) : null;
+
+    if (input && input.value.trim() === '') input.value = '+375 ';
+  });
+
+  document.addEventListener('focusout', (e) => {
+    const input = e.target.closest ? e.target.closest(TEL_FIELD) : null;
+
+    if (!input) return;
+
+    const digits = phoneDigits(input.value);
+
+    input.value = ('' === digits || '375' === digits) ? '' : prettyPhone(input.value);
+  });
 
   const setupValidation = (form) => {
     if (typeof JustValidate === 'undefined') {
@@ -353,10 +457,18 @@ if (menu && menuOpenBtn) {
       if (!optional) rules.push({ rule: 'required', errorMessage: 'Заполните это поле!' });
 
       if (input.type === 'tel') {
+        // Белорусский номер — строго девять цифр после кода страны…
         rules.push({
-          rule: 'customRegexp',
-          value: /^[+\d][\d\s()\-]{5,}$/,
-          errorMessage: 'Введите корректный номер',
+          validator: (value) => !String(value).trim() || !looksBelarusian(value)
+            || isValidBy(value),
+          errorMessage: 'После +375 нужно 9 цифр — проверьте номер',
+        });
+
+        // …а любой другой — только с кодом страны.
+        rules.push({
+          validator: (value) => !String(value).trim() || looksBelarusian(value)
+            || isForeign(value),
+          errorMessage: 'Укажите номер с кодом страны, например +375 29 123-45-67',
         });
       }
 

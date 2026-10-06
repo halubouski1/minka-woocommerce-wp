@@ -342,4 +342,5 @@ require_once get_template_directory() . '/inc/consent.php';
 require_once get_template_directory() . '/inc/seed.php';
 require_once get_template_directory() . '/inc/seed-legal.php';
 require_once get_template_directory() . '/inc/seed-catalog.php';
+require_once get_template_directory() . '/inc/seed-blog.php';
 

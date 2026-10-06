@@ -150,6 +150,14 @@ function minka_create_form( $key ) {
 			'adminLabel' => $name,
 		);
 
+		// Телефон: международный формат. У Gravity Forms формат «standard» —
+		// это американская маска (555) 123-4567, и она отклоняет любой
+		// белорусский номер. Причём если формат не задать, плагин сам
+		// подставляет «standard» при первом сохранении формы в редакторе.
+		if ( 'phone' === $field['type'] ) {
+			$entry['phoneFormat'] = 'international';
+		}
+
 		if ( ! empty( $field['choices'] ) ) {
 			$entry['choices'] = array();
 			$entry['inputs']  = array();
@@ -219,6 +227,31 @@ function minka_create_form( $key ) {
 }
 
 /**
+ * Снимаем с телефона американскую маску Gravity Forms.
+ *
+ * Нужно для форм, которые уже созданы: формат «standard» плагин выставляет
+ * сам, и тогда заявка с белорусским номером отклоняется на сервере, хотя
+ * в браузере проверка прошла. Фильтр правит форму в момент проверки, поэтому
+ * трогать её в редакторе не требуется.
+ */
+function minka_form_phone_format( $form ) {
+	$ours = array_map( 'intval', (array) get_option( 'minka_form_ids', array() ) );
+
+	if ( ! in_array( (int) $form['id'], $ours, true ) ) {
+		return $form;
+	}
+
+	foreach ( $form['fields'] as $field ) {
+		if ( 'phone' === $field->type ) {
+			$field->phoneFormat = 'international';
+		}
+	}
+
+	return $form;
+}
+add_filter( 'gform_pre_validation', 'minka_form_phone_format' );
+
+/**
  * Приём заявки: раскладываем поля по ID Gravity Forms и отдаём плагину.
  */
 function minka_form_submit() {
@@ -253,6 +286,26 @@ function minka_form_submit() {
 			$value = sanitize_text_field( $raw );
 		}
 
+		// Телефон проверяем и приводим к +375291112233 здесь, а не только в
+		// браузере: проверку в браузере можно обойти, а дальше номер уходит
+		// в CRM и в Meta как ключ склейки — по мусору склеятся разные люди.
+		// Заодно в заявке и в уведомлении оказывается один формат, а не пять.
+		if ( 'phone' === $name && '' !== $value && function_exists( 'minka_crm_normalize_phone' ) ) {
+			$normalized = minka_crm_normalize_phone( $value );
+
+			if ( '' === $normalized ) {
+				wp_send_json_error(
+					array(
+						'message' => 'Проверьте номер телефона: для Беларуси это +375 и девять цифр, для других стран — с кодом страны.',
+						'field'   => 'phone',
+					),
+					422
+				);
+			}
+
+			$value = $normalized;
+		}
+
 		// GFAPI::submit_form() ждёт значения так же, как их прислала бы сама
 		// форма: input_2, а у чекбокса — input_7_1 (по номеру варианта).
 		if ( 'checkbox' === $field->type && ! empty( $field->inputs ) ) {
@@ -268,7 +321,20 @@ function minka_form_submit() {
 	$result = GFAPI::submit_form( $form_id, $values );
 
 	if ( is_wp_error( $result ) || empty( $result['is_valid'] ) ) {
-		$message = is_wp_error( $result ) ? $result->get_error_message() : 'Проверьте заполнение полей.';
+		$message = 'Проверьте заполнение полей.';
+
+		if ( is_wp_error( $result ) ) {
+			$message = $result->get_error_message();
+		} elseif ( ! empty( $result['validation_messages'] ) ) {
+			// Gravity Forms называет поле, которое не прошло. Человеку это
+			// полезнее общей фразы, а нам — видно причину в консоли браузера.
+			$parts = array_map( 'wp_strip_all_tags', (array) $result['validation_messages'] );
+			$parts = array_filter( array_map( 'trim', $parts ) );
+
+			if ( $parts ) {
+				$message = implode( ' ', $parts );
+			}
+		}
 
 		wp_send_json_error( array( 'message' => $message ), 422 );
 	}
